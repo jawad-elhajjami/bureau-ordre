@@ -27,6 +27,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role_id',
     ];
 
     /**
@@ -63,14 +64,5 @@ class User extends Authenticatable
         return $this->belongsTo(Role::class);
     }
 
-    public static function boot(){
-        parent::boot();
-
-        static::deleting(function ($user) {
-            if ($user->non_deletable) {
-                throw new \Exception('This user cannot be deleted.');
-            }
-        });
-    }
 
 }
