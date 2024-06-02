@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html data-theme="winter" lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -17,26 +17,73 @@
         <!-- Styles -->
         @livewireStyles
     </head>
-    <body class="font-sans antialiased">
-        <x-banner />
-
-        <div class="min-h-screen bg-gray-100 dark:bg-gray-900">
-            @livewire('navigation-menu')
-
-            <!-- Page Heading -->
-            @if (isset($header))
-                <header class="bg-white dark:bg-gray-800 shadow">
-                    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                        {{ $header }}
-                    </div>
-                </header>
-            @endif
-
-            <!-- Page Content -->
-            <main>
+    <body class="font-sans antialiased min-h-screen font-sans antialiased bg-base-200/50 dark:bg-base-200">
+ 
+        {{-- The navbar with `sticky` and `full-width` --}}
+        <x-mary-nav sticky full-width>
+     
+            <x-slot:brand>
+                {{-- Drawer toggle for "main-drawer" --}}
+                <label for="main-drawer" class="lg:hidden mr-3">
+                    {{-- <x-icon name="o-bars-3" class="cursor-pointer" /> --}}
+                </label>
+     
+                {{-- Brand --}}
+                <img src="{{ asset('images/logo.png') }}" alt="ENS Smart Doc Logo PNG" width="60px">
+            </x-slot:brand>
+     
+            {{-- Right side actions --}}
+            <x-slot:actions>
+                <x-mary-button label="Messages reçues" icon="o-envelope" link="###" class="btn-ghost btn-sm" responsive />
+                <x-mary-button label="Notifications" icon="o-bell" link="###" class="btn-ghost btn-sm" responsive />
+            </x-slot:actions>
+        </x-mary-nav>
+     
+        {{-- The main content with `full-width` --}}
+        <x-mary-main with-nav full-width>
+     
+            {{-- This is a sidebar that works also as a drawer on small screens --}}
+            {{-- Notice the `main-drawer` reference here --}}
+            <x-slot:sidebar drawer="main-drawer" collapsible class="bg-base-200">
+     
+                {{-- User --}}
+                @if($user = auth()->user())
+                    <x-mary-list-item :item="$user" value="name" sub-value="email" no-separator no-hover class="pt-2">
+                        <x-slot:actions>
+                            <form method="POST" action="{{ route('logout') }}" x-data>
+                                @csrf
+            
+                                <x-nav-link href="{{ route('logout') }}"
+                                               @click.prevent="$root.submit();">
+                                    {{ __('Log Out') }}
+                                </x-nav-link>
+                            </form>
+                        </x-slot:actions>
+                    </x-mary-list-item>
+     
+                    <x-mary-menu-separator />
+                @endif
+     
+                {{-- Activates the menu item when a route matches the `link` property --}}
+                <x-mary-menu activate-by-route>
+                    <x-mary-menu-item title="Tableau de bord" icon="o-home" link="{{ route('dashboard') }}" wire:navigate/>
+                    <x-mary-menu-item title="Gérer les utilisateurs" icon="o-user" link="{{ route('manage-users') }}" wire:navigate/>
+                    <x-mary-menu-item title="Documents" icon="o-document" link="###" />
+                    <x-mary-menu-item title="Services" icon="o-building-office" link="###" />
+                    <x-mary-menu-item title="Catégories de documents" icon="o-folder" link="###" />
+                    <x-mary-menu-item title="Paramètres" icon="o-cog-6-tooth" link="{{ route('profile.show') }}" />
+                </x-mary-menu>
+            </x-slot:sidebar>
+     
+            {{-- The `$slot` goes here --}}
+            <x-slot:content>
                 {{ $slot }}
-            </main>
-        </div>
+            </x-slot:content>
+        </x-mary-main>
+     
+        {{--  TOAST area --}}
+        <x-mary-toast />
+    </body>
 
         @stack('modals')
 
