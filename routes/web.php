@@ -1,5 +1,6 @@
 <?php
 
+use App\Livewire\ManageCategories;
 use App\Livewire\ManageUsers;
 use Illuminate\Support\Facades\Route;
 
@@ -14,6 +15,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+
 Route::get('/', function () {
     return view('welcome');
 });
@@ -27,4 +29,6 @@ Route::middleware([
         return view('dashboard');
     })->name('dashboard');
     Route::get('/manage-users', ManageUsers::class)->name('manage-users')->middleware('role:admin');
+    Route::get('/manage-categories', ManageCategories::class)->name('manage-categories')->middleware('role:admin');
 });
+

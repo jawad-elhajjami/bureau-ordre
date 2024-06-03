@@ -20,6 +20,9 @@
                     <x-nav-link href="{{ route('manage-users') }}" :active="request()->routeIs('manage-users')" wire:navigate>
                         {{ __('Utilisateurs') }}
                     </x-nav-link>
+                    <x-nav-link href="{{ route('manage-categories') }}" :active="request()->routeIs('manage-categories')">
+                        {{ __('Catégories de documents') }}
+                    </x-nav-link>
                     @endif
 
                 </div>
