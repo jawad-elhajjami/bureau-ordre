@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html data-theme="winter" lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html data-theme="" lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -42,6 +42,18 @@
                  
                     <x-mary-menu-item title="Notification 1" />
                     <x-mary-menu-item title="Notification 2" />
+                </x-mary-dropdown>
+                <x-mary-dropdown>
+                    <x-slot:trigger>
+                        <x-mary-button icon="o-computer-desktop" label="Changez le theme" class="btn-ghost btn-sm" responsive />
+                    </x-slot:trigger>
+                 
+                    <x-mary-menu-item title="Emerald" onclick="changeTheme('emerald')" />
+                    <x-mary-menu-item title="Light" onclick="changeTheme('light')" />
+                    <x-mary-menu-item title="Winter" onclick="changeTheme('winter')" />
+                    <x-mary-menu-item title="Lofi" onclick="changeTheme('lofi')" />
+                    <x-mary-menu-item title="Nord" onclick="changeTheme('nord')" />
+
                 </x-mary-dropdown>
             </x-slot:actions>
         </x-mary-nav>
@@ -97,5 +109,11 @@
         @stack('modals')
 
         @livewireScripts
+        
+        <script>
+            function changeTheme(theme) {
+                document.documentElement.setAttribute('data-theme', theme);
+            }
+        </script>
     </body>
 </html>

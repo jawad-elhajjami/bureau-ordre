@@ -26,7 +26,9 @@ class ManageServices extends Component
 
     public ServiceForm $form;
 
+
     public function assignServiceToUsers(int $serviceId, array $usersIdsArray){
+        User::where('service_id', $serviceId)->update(['service_id' => null]); // Unassign all users first
         foreach($usersIdsArray as $userId){
             $user = User::findOrFail($userId);
             $user->update([
@@ -36,15 +38,17 @@ class ManageServices extends Component
     }
 
     public function save(){
-        
+    
         if($this->editMode){
-            $this->assignServiceToUsers($this->clickedServiceId, $this->users_multi_ids);
             $this->form->update();
+            $this->assignServiceToUsers($this->clickedServiceId, $this->users_multi_ids);
             $this->editMode = false;
             $this->success("Service modifié avec succès !");
         }else{
-            $this->assignServiceToUsers(5, $this->users_multi_ids);
             $this->form->store();
+            // Retrieve the newly created service ID
+            $newServiceId = $this->form->newServiceId;
+            $this->assignServiceToUsers($newServiceId, $this->users_multi_ids);
             $this->success("Service crée avec succès !");
         }
 
@@ -69,6 +73,7 @@ class ManageServices extends Component
 
     public function showModal(){
         $this->form->reset();
+        $this->reset('users_multi_ids');
         $this->editMode = false;
         $this->serviceModal = true;
     }
@@ -93,9 +98,10 @@ class ManageServices extends Component
             ['key' => 'members', 'label' => 'Membres'],
             ['key' => 'n_documents', 'label' => 'Nombre de documents'],
         ];
-
+        $availableUsers = User::all();
         return view('livewire.manage-services',[
             'headers' => $headers,
+            'availableUsers' => $availableUsers,
             'services' => Service::where('name', 'LIKE', '%' . $this->search . '%')->paginate(10),
         ]);
     }
