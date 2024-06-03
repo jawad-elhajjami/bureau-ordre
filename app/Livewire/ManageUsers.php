@@ -12,11 +12,11 @@ use Livewire\WithPagination;
 use Mary\Traits\Toast;
 
 class ManageUsers extends Component
-{   
+{
 
     use WithPagination;
     use Toast;
-    
+
     public bool $userModal = false;
     public bool $editMode = false;
     public $search = '';
@@ -25,9 +25,9 @@ class ManageUsers extends Component
     public UserForm $form;
 
     // method to save user data
-    
-    public function save(){
 
+    public function save(){
+ 
         if($this->editMode){
             $this->form->update();
             $this->editMode = false;
@@ -57,7 +57,7 @@ class ManageUsers extends Component
         $this->userModal = true;
     }
 
-    // method to delete user 
+    // method to delete user
 
     public function delete($id):void{
         try{
@@ -94,5 +94,5 @@ class ManageUsers extends Component
         ]);
     }
 
-    
+
 }
