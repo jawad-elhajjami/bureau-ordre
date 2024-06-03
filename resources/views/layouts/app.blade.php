@@ -25,7 +25,7 @@
             <x-slot:brand>
                 {{-- Drawer toggle for "main-drawer" --}}
                 <label for="main-drawer" class="lg:hidden mr-3">
-                    {{-- <x-icon name="o-bars-3" class="cursor-pointer" /> --}}
+                    <x-mary-icon name="o-bars-3" class="cursor-pointer" />
                 </label>
      
                 {{-- Brand --}}
@@ -35,7 +35,14 @@
             {{-- Right side actions --}}
             <x-slot:actions>
                 <x-mary-button label="Messages reçues" icon="o-envelope" link="###" class="btn-ghost btn-sm" responsive />
-                <x-mary-button label="Notifications" icon="o-bell" link="###" class="btn-ghost btn-sm" responsive />
+                <x-mary-dropdown>
+                    <x-slot:trigger>
+                        <x-mary-button icon="o-bell" label="Notifications" class="btn-ghost btn-sm" responsive />
+                    </x-slot:trigger>
+                 
+                    <x-mary-menu-item title="Notification 1" />
+                    <x-mary-menu-item title="Notification 2" />
+                </x-mary-dropdown>
             </x-slot:actions>
         </x-mary-nav>
      
@@ -67,10 +74,12 @@
                 {{-- Activates the menu item when a route matches the `link` property --}}
                 <x-mary-menu activate-by-route>
                     <x-mary-menu-item title="Tableau de bord" icon="o-home" link="{{ route('dashboard') }}" wire:navigate/>
-                    <x-mary-menu-item title="Gérer les utilisateurs" icon="o-user" link="{{ route('manage-users') }}" wire:navigate/>
                     <x-mary-menu-item title="Documents" icon="o-document" link="###" />
-                    <x-mary-menu-item title="Services" icon="o-building-office" link="###" />
-                    <x-mary-menu-item title="Catégories de documents" icon="o-folder" link="###" />
+                    @if(Auth::user() && Auth::user()->role->name == 'admin')
+                        <x-mary-menu-item title="Gérer les utilisateurs" icon="o-user" link="{{ route('manage-users') }}" wire:navigate/>
+                        <x-mary-menu-item title="Services" icon="o-building-office" link="{{ route('manage-services') }}" wire:navigate/>
+                        <x-mary-menu-item title="Catégories de documents" icon="o-folder" link="###" />
+                    @endif
                     <x-mary-menu-item title="Paramètres" icon="o-cog-6-tooth" link="{{ route('profile.show') }}" />
                 </x-mary-menu>
             </x-slot:sidebar>

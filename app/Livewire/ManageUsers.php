@@ -3,7 +3,9 @@
 namespace App\Livewire;
 
 use App\Livewire\Forms\UserForm;
+use App\Models\Service;
 use App\Models\User;
+use Exception;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -22,7 +24,6 @@ class ManageUsers extends Component
 
     public UserForm $form;
 
-
     // method to save user data
     
     public function save(){
@@ -37,12 +38,13 @@ class ManageUsers extends Component
         }
 
         $this->userModal = false;
-        // show success toast
     }
 
 
     public function showModal(){
         $this->form->reset();
+        $this->form->role_id = 2;
+        $this->editMode = false;
         $this->userModal = true;
     }
 
@@ -58,31 +60,37 @@ class ManageUsers extends Component
     // method to delete user 
 
     public function delete($id):void{
-        $user = User::findOrFail($id);
-        if (Gate::denies('can-manage-users')) {
-            abort(403, 'Unauthorized');
-        }else{
-            $user->delete();
-            $this->error("Utilisateur supprimé");
+        try{
+            $user = User::findOrFail($id);
+            if (Gate::denies('can-manage-users')) {
+                abort(403, 'Unauthorized');
+            }else{
+                $user->delete();
+                $this->error("Utilisateur supprimé");
+            }
+        } catch(Exception $e){
+            $this->error($e->getMessage());
         }
+        
     }
 
 
     public function render()
     {   
-        $users = User::paginate(5);
+        $users = User::paginate(10);
             
         $headers = [
             ['key' => 'id', 'label' => 'Identifiant'],
             ['key' => 'name', 'label' => 'Nom'],
             ['key' => 'email', 'label' => 'E-mail'],
             ['key' => 'role.name', 'label' => 'Role'],
-            ['key' => '', 'label' => 'Departement'],
+            ['key' => 'service', 'label' => 'Service'],
         ];
 
         return view('livewire.manage-users',[
             'users' => User::where('name', 'LIKE', '%' . $this->search . '%')->paginate(10),
-            'headers' => $headers
+            'headers' => $headers,
+            'services' => Service::all()
         ]);
     }
 

@@ -11,10 +11,6 @@ use Mary\Traits\Toast;
 
 class UserForm extends Form
 {
-
-    use Toast;
-
-
     public ?User $user;
 
     // form fields
@@ -34,8 +30,8 @@ class UserForm extends Form
     #[Validate('required|exists:roles,id')] 
     public $role_id;
 
-    // #[Validate('required')] 
-    public $depratement_id;
+    // #[Validate('exists:services,id')] 
+    public $service_id;
 
 
     public function setUser(User $user){
@@ -43,7 +39,9 @@ class UserForm extends Form
         $this->fullName = $user->name;
         $this->email = $user->email;
         $this->role_id = $user->role_id;
+        $this->service_id = $user->service_id;
     }
+
 
     public function store(){
         
@@ -59,7 +57,8 @@ class UserForm extends Form
                 'name' => $this->fullName,
                 'email' => $this->email,
                 'password' => Hash::make($this->password),
-                'role_id' => $this->role_id
+                'role_id' => $this->role_id,
+                'service_id' => $this->service_id
             ]);
             // reset form fields
             $this->reset();
@@ -75,6 +74,7 @@ class UserForm extends Form
             'password' => 'nullable|min:8|max:50',
             'confirm_password' => 'nullable|min:8|max:50|same:password',
             'role_id' => 'required|exists:roles,id',
+            // 'service_id' => 'exists:services,id'
         ]);
 
         // check if user type is "admin" before allowing him to create a user
@@ -86,7 +86,8 @@ class UserForm extends Form
                 'name' => $this->fullName,
                 'email' => $this->email,
                 'password' => Hash::make($this->password),
-                'role_id' => $this->role_id
+                'role_id' => $this->role_id,
+                'service_id' => $this->service_id
             ]);
             // reset form fields
             $this->reset();

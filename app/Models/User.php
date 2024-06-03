@@ -28,6 +28,7 @@ class User extends Authenticatable
         'email',
         'password',
         'role_id',
+        'service_id'
     ];
 
     /**
@@ -64,5 +65,27 @@ class User extends Authenticatable
         return $this->belongsTo(Role::class);
     }
 
+    public function service(){
+        return $this->belongsTo(Service::class);
+    }
+
+
+    /**
+     * Get the initials of the user's name.
+     *
+     * @return string
+     */
+    public function getInitialsAttribute()
+    {
+        $nameParts = explode(' ', $this->name);
+        $initials = '';
+
+        foreach ($nameParts as $part) {
+            $initials .= strtoupper($part[0]);
+        }
+
+        return $initials;
+    }
+    
 
 }

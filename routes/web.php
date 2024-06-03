@@ -1,5 +1,6 @@
 <?php
 
+use App\Livewire\ManageServices;
 use App\Livewire\ManageUsers;
 use Illuminate\Support\Facades\Route;
 
@@ -27,4 +28,5 @@ Route::middleware([
         return view('dashboard');
     })->name('dashboard');
     Route::get('/manage-users', ManageUsers::class)->name('manage-users')->middleware('role:admin');
+    Route::get('/manage-services', ManageServices::class)->name('manage-services')->middleware('role:admin');
 });

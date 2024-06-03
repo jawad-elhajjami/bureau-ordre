@@ -30,6 +30,11 @@ class AuthServiceProvider extends ServiceProvider
             return $user->role->name === 'admin';
         });
 
+        // check if user is admin before allowing him to manage services
+        Gate::define('can-manage-services', function ($user) {
+            return $user->role->name === 'admin';
+        });
+
 
     }
 }
