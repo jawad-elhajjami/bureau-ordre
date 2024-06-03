@@ -78,10 +78,8 @@
                     @if(Auth::user() && Auth::user()->role->name == 'admin')
                         <x-mary-menu-item title="Gérer les utilisateurs" icon="o-user" link="{{ route('manage-users') }}" wire:navigate/>
                         <x-mary-menu-item title="Services" icon="o-building-office" link="{{ route('manage-services') }}" wire:navigate/>
-                        <x-mary-menu-item title="Catégories de documents" icon="o-folder" link="###" />
+                        <x-mary-menu-item title="Catégories de documents" icon="o-folder" link="{{ route('manage-categories') }}" wire:navigate />
                     @endif
-                    <x-mary-menu-item title="Services" icon="o-building-office" link="###" />
-                    <x-mary-menu-item title="Catégories de documents" icon="o-folder" link="{{ route('manage-categories') }}" wire:navigate />
                     <x-mary-menu-item title="Paramètres" icon="o-cog-6-tooth" link="{{ route('profile.show') }}" />
                 </x-mary-menu>
             </x-slot:sidebar>
