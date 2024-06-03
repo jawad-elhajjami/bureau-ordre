@@ -60,23 +60,21 @@
         <x-mary-form wire:submit="save">
             <h3 class="text-2xl text-gray-900 dark:text-neutral-200">{{ $editMode ? 'Modifier le service' : 'Ajouter un service' }}</h3>
             <x-mary-input label="Titre de service" wire:model="form.name"/>
-            
-            @php
-                $users = App\Models\User::whereNull('service_id')
-                        ->orWhere('service_id', 0)
-                        ->get();
-            @endphp
-
-            {{-- Custom options --}}
-            <x-mary-choices-offline
-                label="Membres"
-                wire:model="users_multi_ids"
-                :options="$users"
-                icon="o-users"
-                hint="Choisir les membres de ce service"
-                multiple
-                searchable />
-         
+            <h4 class="mt-4 mb-2 text-lg">Sélectionnez les membres</h4>
+                @if(count($availableUsers) !== 0)
+                    @foreach($availableUsers as $user)
+                    <div class="grid grid-cols-2">
+                        <x-mary-checkbox
+                            label="{{ $user->name }}"
+                            wire:model="users_multi_ids"
+                            value="{{ $user->id }}"
+                            class="checkbox-primary"
+                        />
+                    </div>
+                    @endforeach
+                @else
+                <p>No members available ! </p>
+                @endif
             <x-slot:actions>
                 <x-mary-button label="Annuler" @click="$wire.serviceModal = false" />
                 <x-mary-button label="{{ $editMode ? 'Modifier' : 'Créer' }}" class="btn-primary" type="submit" spinner="save" />

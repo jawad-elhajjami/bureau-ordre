@@ -13,6 +13,7 @@ class ServiceForm extends Form
 
     #[Validate('required|min:3|max:255|string')] 
     public $name;
+    public $newServiceId;
 
     public function setService(Service $service){
         $this->service = $service;
@@ -29,12 +30,13 @@ class ServiceForm extends Form
             abort(403, 'Unauthorized');
         }
         else{
-            Service::create([
+            $service = Service::create([
                 'name' => $this->name,
             ]);
             // reset form fields
             $this->reset();
-        } 
+            $this->newServiceId = $service->id;
+        }
     }
 
     public function update(){
