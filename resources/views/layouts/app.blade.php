@@ -111,9 +111,22 @@
         @livewireScripts
         
         <script>
+            // Function to change the theme and save it to localStorage
             function changeTheme(theme) {
                 document.documentElement.setAttribute('data-theme', theme);
+                localStorage.setItem('theme', theme);
             }
+
+            // Function to load the theme from localStorage
+            function loadTheme() {
+                const theme = localStorage.getItem('theme');
+                if (theme) {
+                    document.documentElement.setAttribute('data-theme', theme);
+                }
+            }
+
+            // Load the theme when the page loads
+            document.addEventListener('DOMContentLoaded', loadTheme);
         </script>
     </body>
 </html>
