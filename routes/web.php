@@ -1,10 +1,7 @@
 <?php
 
-<<<<<<< HEAD
 use App\Livewire\ManageServices;
-=======
 use App\Livewire\ManageCategories;
->>>>>>> 18b8ffd2c639edb97dbe2390bdbbb71499b9421b
 use App\Livewire\ManageUsers;
 use Illuminate\Support\Facades\Route;
 
