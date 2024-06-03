@@ -1,5 +1,5 @@
 
-<div class="py-12">
+<div class="container">
     <div>
         
 
@@ -45,6 +45,9 @@
                     @scope('cell_role.name', $user)
                         <x-mary-badge :value="$user->role->name" class="{{ $user->role->name === 'admin' ? 'bg-red-400 text-white' : 'badge-primary'  }}" />
                     @endscope
+                    @scope('cell_service', $user)
+                        {{ $user->service ? $user->service->name : "N/A" }}
+                    @endscope
 
                     @scope('actions', $user) 
                     <div class="flex gap-1">
@@ -76,21 +79,25 @@
                 
                 @php
                     $roles = App\Models\Role::all();
+                    $services = App\Models\Service::all();
                 @endphp
                 
                 <x-mary-select
                     label="Choisir un role"
+                    placeholder="Choisir un role"
                     :options="$roles"
                     wire:model="form.role_id"
                     inline
-                    selected
                 />
 
             </div>
             <div class="mb-4">
                 <x-mary-select
                     label="Service"
-                    wire:model="form.depratement_id"
+                    :options="$services"
+                    placeholder="Choisir un service/département"
+                    placeholder-value="0"
+                    wire:model="form.service_id"
                     inline
                 />
             </div>
