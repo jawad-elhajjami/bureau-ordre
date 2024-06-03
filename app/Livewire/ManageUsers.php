@@ -10,11 +10,11 @@ use Livewire\WithPagination;
 use Mary\Traits\Toast;
 
 class ManageUsers extends Component
-{   
+{
 
     use WithPagination;
     use Toast;
-    
+
     public bool $userModal = false;
     public bool $editMode = false;
     public $search = '';
@@ -24,9 +24,9 @@ class ManageUsers extends Component
 
 
     // method to save user data
-    
-    public function save(){
 
+    public function save(){
+ 
         if($this->editMode){
             $this->form->update();
             $this->editMode = false;
@@ -55,7 +55,7 @@ class ManageUsers extends Component
         $this->userModal = true;
     }
 
-    // method to delete user 
+    // method to delete user
 
     public function delete($id):void{
         $user = User::findOrFail($id);
@@ -69,9 +69,9 @@ class ManageUsers extends Component
 
 
     public function render()
-    {   
+    {
         $users = User::paginate(5);
-            
+
         $headers = [
             ['key' => 'id', 'label' => 'Identifiant'],
             ['key' => 'name', 'label' => 'Nom'],
@@ -86,5 +86,5 @@ class ManageUsers extends Component
         ]);
     }
 
-    
+
 }

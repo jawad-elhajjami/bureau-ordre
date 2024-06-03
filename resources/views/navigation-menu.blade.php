@@ -21,7 +21,7 @@
                         {{ __('Utilisateurs') }}
                     </x-nav-link>
                     <x-nav-link href="{{ route('manage-categories') }}" :active="request()->routeIs('manage-categories')">
-                        {{ __('Catégories') }}
+                        {{ __('Catégories de documents') }}
                     </x-nav-link>
                     @endif
 

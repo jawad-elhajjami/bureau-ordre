@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+
 Route::get('/', function () {
     return view('welcome');
 });
@@ -30,3 +31,4 @@ Route::middleware([
     Route::get('/manage-users', ManageUsers::class)->name('manage-users')->middleware('role:admin');
     Route::get('/manage-categories', ManageCategories::class)->name('manage-categories')->middleware('role:admin');
 });
+
