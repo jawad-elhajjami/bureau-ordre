@@ -62,14 +62,27 @@
             <x-mary-input label="Titre de service" wire:model="form.name"/>
             <h4 class="mt-4 mb-2 text-lg">Sélectionnez les membres</h4>
                 @if(count($availableUsers) !== 0)
+                
                     @foreach($availableUsers as $user)
                     <div class="grid grid-cols-2">
-                        <x-mary-checkbox
-                            label="{{ $user->name }}"
-                            wire:model="users_multi_ids"
-                            value="{{ $user->id }}"
-                            class="checkbox-primary"
-                        />
+                        
+                        @if ($user->service_id && $user->service_id !== $clickedServiceId)
+                            <x-mary-checkbox
+                                label="{{ $user->name }}"
+                                wire:model="users_multi_ids"
+                                value="{{ $user->id }}"
+                                class="checkbox-primary"
+                                disabled
+                            />
+                            <x-mary-badge value="{{ $user->service->name }}" class="badge-warning ml-2" />
+                        @else
+                            <x-mary-checkbox
+                                label="{{ $user->name }}"
+                                wire:model="users_multi_ids"
+                                value="{{ $user->id }}"
+                                class="checkbox-primary"
+                            />
+                        @endif
                     </div>
                     @endforeach
                 @else
