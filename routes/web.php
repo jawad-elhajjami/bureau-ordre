@@ -1,8 +1,11 @@
 <?php
 
+use App\Http\Controllers\FilesController;
+use App\Livewire\CreateDocument;
 use App\Livewire\ManageServices;
 use App\Livewire\ManageCategories;
 use App\Livewire\ManageUsers;
+use App\Livewire\ViewDocuments;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -32,5 +35,9 @@ Route::middleware([
     Route::get('/manage-users', ManageUsers::class)->name('manage-users')->middleware('role:admin');
     Route::get('/manage-services', ManageServices::class)->name('manage-services')->middleware('role:admin');
     Route::get('/manage-categories', ManageCategories::class)->name('manage-categories')->middleware('role:admin');
+    Route::get('/documents/create', CreateDocument::class)->name('create-document');
+    Route::get('/documents/all', ViewDocuments::class)->name('view-documents');
+    Route::get('/files/{path}', [FilesController::class, 'show'])->where('path', '.*')->name('files.show');
+
 });
 

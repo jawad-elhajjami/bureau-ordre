@@ -34,7 +34,6 @@
 
             {{-- Right side actions --}}
             <x-slot:actions>
-                <x-mary-button label="Messages reçues" icon="o-envelope" link="###" class="btn-ghost btn-sm" responsive />
                 <x-mary-dropdown>
                     <x-slot:trigger>
                         <x-mary-button icon="o-bell" label="Notifications" class="btn-ghost btn-sm" responsive />
@@ -86,7 +85,10 @@
                 {{-- Activates the menu item when a route matches the `link` property --}}
                 <x-mary-menu activate-by-route>
                     <x-mary-menu-item title="Tableau de bord" icon="o-home" link="{{ route('dashboard') }}" wire:navigate/>
-                    <x-mary-menu-item title="Documents" icon="o-document" link="###" />
+                    <x-mary-menu-sub title="Documents" icon="o-document">
+                        <x-mary-menu-item title="Ajouter un document" link="{{ route('create-document') }}" icon="o-plus" />
+                        <x-mary-menu-item title="Liste de documents" link="{{ route('view-documents') }}" icon="o-list-bullet" />
+                    </x-mary-menu-sub>
                     @if(Auth::user() && Auth::user()->role->name == 'admin')
                         <x-mary-menu-item title="Gérer les utilisateurs" icon="o-user" link="{{ route('manage-users') }}" wire:navigate/>
                         <x-mary-menu-item title="Services" icon="o-building-office" link="{{ route('manage-services') }}" wire:navigate/>
