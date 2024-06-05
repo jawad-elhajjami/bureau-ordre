@@ -21,6 +21,10 @@ class Document extends Model
         'category_id',
     ];
 
+    public function owner()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
 
     protected static function boot()
     {
