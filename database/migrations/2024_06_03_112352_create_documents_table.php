@@ -12,16 +12,16 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('documents', function (Blueprint $table) {
-            $table->id('document_id');
-            $table->integer('order_number');
+            $table->id();
+            $table->string('order_number');
             $table->string('subject', 255);
             $table->string('file_path', 255);
             $table->text('description')->nullable();
-            $table->enum('status', ['draft', 'submitted', 'approved', 'rejected']);
-            $table->enum('importance_level', ['low', 'medium', 'high']);
-            $table->integer('opt_code');
+            // $table->enum('status', ['draft', 'submitted', 'approved', 'rejected']);
+            $table->enum('importance_level', ['low', 'medium', 'high'])->nullable();
+            $table->integer('opt_code')->nullable();
             // $table->foreignId('submitted_by')->constrained('users');
-            // $table->foreignId('department_id')->constrained('departments');
+            $table->foreignId('service_id')->constrained('services');
             $table->foreignId('user_id')->constrained('users');
             $table->foreignId('category_id')->constrained('document_categories');
             $table->timestamps();
