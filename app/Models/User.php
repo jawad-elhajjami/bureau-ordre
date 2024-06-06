@@ -28,6 +28,7 @@ class User extends Authenticatable
         'email',
         'password',
         'role_id',
+        'color',
         'service_id'
     ];
 
@@ -87,5 +88,41 @@ class User extends Authenticatable
         return $initials;
     }
     
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($user) {
+            $user->color = self::generateRandomColor();
+        });
+    }
+
+    private static function generateRandomColor()
+    {
+        $colors = [
+            '#2196F3', // Light Blue
+            '#4CAF50', // Light Green
+            '#F44336', // Light Red
+            '#FF9800', // Light Orange
+            '#9C27B0', // Light Purple
+            '#009688', // Light Teal
+            '#FFEB3B', // Light Yellow
+            '#E91E63', // Light Pink
+            '#00BCD4', // Light Cyan
+            '#FFC107', // Light Amber
+            '#3F51B5', // Indigo
+            '#795548', // Brown
+            '#673AB7', // Deep Purple
+            '#FF5722', // Deep Orange
+            '#607D8B', // Blue Grey
+            '#CDDC39', // Lime
+            '#8BC34A', // Light Green
+            '#03A9F4', // Light Blue
+            '#9E9E9E', // Grey
+            '#FF5252', // Red
+        ];
+        return $colors[array_rand($colors)];
+    }
+
 
 }

@@ -28,7 +28,7 @@
 
                     <x-mary-popover>
                         <x-slot:trigger>
-                            <div class="w-9 h-9 bg-purple-400 text-sm font-bold text-white flex items-center justify-center rounded-full border border-gray-400">{{ $member->initials }}</div>
+                            <div class="w-9 h-9 text-sm font-bold text-white flex items-center justify-center rounded-full border border-gray-300" style="color:#fff;background-color: {{ $member->color ?? 'rgb(168,85,247)' }};">{{ $member->initials }}</div>
                         </x-slot:trigger>
                         <x-slot:content>
                             Nom: {{ $member->name }} <br>

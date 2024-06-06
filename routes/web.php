@@ -5,6 +5,7 @@ use App\Livewire\CreateDocument;
 use App\Livewire\ManageServices;
 use App\Livewire\ManageCategories;
 use App\Livewire\ManageUsers;
+use App\Livewire\ViewDocumentComponent;
 use App\Livewire\ViewDocuments;
 use Illuminate\Support\Facades\Route;
 
@@ -38,6 +39,8 @@ Route::middleware([
     Route::get('/documents/create', CreateDocument::class)->name('create-document');
     Route::get('/documents/all', ViewDocuments::class)->name('view-documents');
     Route::get('/files/{path}', [FilesController::class, 'show'])->where('path', '.*')->name('files.show');
+    Route::get('/documents/view/{id}', ViewDocumentComponent::class)->name('documents.view');
+
 
 });
 

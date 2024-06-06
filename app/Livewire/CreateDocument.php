@@ -47,15 +47,6 @@ class CreateDocument extends Component
         $this->n_ordre = $yearMonth . '_N' . str_pad($latestId + 1, 3, '0', STR_PAD_LEFT);
     }
 
-    // // Validation rules
-    // protected function rules()
-    // {
-    //     return [
-    //         // Other validation rules...
-    //         'file' => ($this->file) ? 'required|file|max:2048' : '', // Conditionally apply validation rule
-    //     ];
-    // }
-
     public function mount()
     {
         // Generate n_ordre when the component is mounted
@@ -99,8 +90,6 @@ class CreateDocument extends Component
         
     }
 
-    
-    
     public function render()
     {
         return view('livewire.create-document',[
