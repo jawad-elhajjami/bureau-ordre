@@ -13,7 +13,8 @@
         "laravel/tinker": "^2.8",
         "livewire/livewire": "^3.5",
         "livewire/volt": "^1.6",
-        "robsontenorio/mary": "^1.32"
+        "robsontenorio/mary": "^1.32",
+        "smalot/pdfparser": "^2.10"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",
