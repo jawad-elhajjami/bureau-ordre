@@ -44,6 +44,10 @@ class AuthServiceProvider extends ServiceProvider
                 return true;
             }
 
+            if ($user->role->name === 'admin') {
+                return true; // Admin can view all documents
+            }
+
             // Check if the document was sent to a service the user belongs to
             if ($document->service_id == $user->service_id) {
                 return true;

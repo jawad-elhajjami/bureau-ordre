@@ -26,6 +26,16 @@ class Document extends Model
         return $this->belongsTo(User::class, 'user_id');
     }
 
+    public function service()
+    {
+        return $this->belongsTo(Service::class);
+    }
+
+    public function category()
+    {
+        return $this->belongsTo(DocumentCategory::class);
+    }
+
     protected static function boot()
     {
         parent::boot();
