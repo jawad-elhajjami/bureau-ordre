@@ -10,7 +10,7 @@
     </x-mary-header>  
     
     <div class="bg-white dark:bg-gray-800 overflow-hidden sm:rounded-lg p-4">
-        <x-mary-table :headers="$headers" :rows="$documents" striped @row-click="alert($event.detail.subject)">
+        <x-mary-table :headers="$headers" :rows="$documents" striped @row-click="alert($event.detail.subject)" :sort-by="$sortBy">
             @scope('cell_sent_by', $document)
             
             @if(auth()->user()->id == $document->owner->id)
@@ -30,7 +30,7 @@
             @endscope
             @scope('actions', $document) 
             <div class="flex gap-1">
-                <x-mary-button icon="o-eye" link="{{ route('documents.view', $document->id) }}" wire:navigate class="btn-sm btn-ghost "  />
+                <x-mary-button icon="o-eye" link="{{ route('documents.view', $document->id) }}" no-wire-navigate class="btn-sm btn-ghost "  />
                 <x-mary-button icon="o-arrow-down-tray" link="{{ route('files.show', ['path' => $document->file_path]) }}" external class="btn-sm btn-ghost "/>
                 <x-mary-button icon="o-trash" spinner class="btn-sm btn-ghost "/>
             </div>
