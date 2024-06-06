@@ -42,7 +42,7 @@
                 <x-mary-card class="col-span-5 lg:col-span-2" shadow separator>
                     <div class="flex items-center justify-between pb-5">
                         <h1 class="text-base font-medium w-full">Nombre de documents par catégorie</h1>
-                        <x-mary-button class="btn-primary" label="Voir plus"/>
+                        <x-mary-button class="btn-primary" label="Voir plus" link="{{ route('manage-categories') }}" wire:navigate/>
                     </div>
                     <ul>
                         <li class="flex items-center justify-between py-3 border-b-2">
@@ -82,7 +82,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('livewire:navigated', function () {
             const ctx = document.getElementById('myChart').getContext('2d');
             const myChart = new Chart(ctx, {
                 type: 'line',
@@ -91,9 +91,17 @@
                     datasets: [{
                         label: 'Documents échangés',
                         data: [12, 19, 3, 5, 2, 3, 10],
-                        backgroundColor: 'rgba(72, 43, 217, 1)',
+                        backgroundColor: 'rgba(72, 43, 217, .1)',
                         borderColor: 'rgba(72, 43, 217, 1)',
-                        borderWidth: 1
+                        borderWidth: 1,
+                        pointRadius: 5,
+                        pointBackgroundColor: 'white',
+                        pointBorderColor: 'rgba(255, 99, 132, 1)',
+                        pointHoverRadius: 8,
+                        pointHoverBackgroundColor: 'white',
+                        pointHoverBorderColor: 'rgba(255, 99, 132, 1)',
+                        fill: true,
+                        tension: 0.4
                     }]
                 },
                 options: {
@@ -109,6 +117,7 @@
                         }
                     },
                     layout: {
+                        drawOnChartArea: true,
                         padding: {
                             bottom: 40
                         }
