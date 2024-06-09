@@ -7,95 +7,101 @@ use App\Models\DocumentCategory;
 use App\Models\Service;
 use App\Models\User;
 use Exception;
-use Livewire\Attributes\Validate;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Mary\Traits\Toast;
 
 class CreateDocument extends Component
 {
-
     use WithFileUploads;
     use Toast;
-    
-    // public CreateDocumentForm $form;
 
-    #[Validate('required|min:3|max:50|string')] 
     public $n_ordre;
-
-    #[Validate('required|min:3|max:255|string')] 
     public $sujet;
-
-    #[Validate('nullable|min:3|max:255|string')] 
     public $description;
-
-    #[Validate('required|file|max:2048')]
     public $file;
-
-    #[Validate('required|exists:services,id')] 
     public $service;
-
-    #[Validate('required|exists:document_categories,id')] 
     public $category;
+    public $recipient;
+    public $users = [];
+    public $loggedInUserId;
 
-    // Generate n_ordre
-    public function generateNOrdre()
-    {
-        // Generate the n_ordre field value
-        $yearMonth = date('Y_m');
-        $latestId = Document::latest()->value('id') ?? 0;
-        $this->n_ordre = $yearMonth . '_N' . str_pad($latestId + 1, 3, '0', STR_PAD_LEFT);
-    }
+    protected $rules = [
+        'n_ordre' => 'required|min:3|max:50|string',
+        'sujet' => 'required|min:3|max:255|string',
+        'description' => 'nullable|min:3|max:255|string',
+        'file' => 'required|file|max:2048',
+        'service' => 'required|exists:services,id',
+        'category' => 'required|exists:document_categories,id',
+        'recipient' => 'nullable|exists:users,id'
+    ];
 
     public function mount()
     {
-        // Generate n_ordre when the component is mounted
-        $this->generateNOrdre();
+        $this->loggedInUserId = auth()->user()->id;
+        $this->n_ordre = $this->generateOrderNumber();
     }
 
-    public function save(){
-        // validate form
+    public function updatedService($value)
+    {
+        $this->users = User::where('service_id', $this->service)
+        ->where('id', '!=', $this->loggedInUserId) // Exclude the logged-in user
+        ->get();
+        $this->recipient = null; // Reset recipient when service changes
+    }
+
+    
+
+    public function save()
+    {
         $this->validate();
 
-        // Store the file and get its path
-        try{
-            
-
-            // Generate $n_ordre if not already set
-            if (!$this->n_ordre) {
-                $this->generateNOrdre();
-            }
-
+        try {
             $filePath = $this->file->storeAs('', $this->n_ordre . '.' . $this->file->getClientOriginalExtension(), 'files');
 
-            
-            // Create a new document
             Document::create([
                 'order_number' => $this->n_ordre,
                 'subject' => $this->sujet,
-                'file_path' => $filePath ,
+                'file_path' => $filePath,
                 'description' => $this->description,
                 'category_id' => $this->category,
                 'service_id' => $this->service,
+                'recipient_id' => $this->recipient,
                 'user_id' => auth()->user()->id
             ]);
+
             $this->success('Document crée avec succès !');
             $this->resetExcept('n_ordre');
-            
 
-        }catch(Exception $e){
+        } catch (Exception $e) {
             $this->error($e->getMessage());
         }
-        
-        
+    }
+
+    public static function generateOrderNumber()
+    {
+        $yearMonth = date('Y_m');
+        $latestOrderNumber = Document::where('order_number', 'like', "{$yearMonth}%")
+            ->orderBy('order_number', 'desc')
+            ->value('order_number');
+
+        if ($latestOrderNumber) {
+            $latestNumber = (int) substr($latestOrderNumber, strrpos($latestOrderNumber, '_N') + 2);
+        } else {
+            $latestNumber = 0;
+        }
+
+        return $yearMonth . '_N' . str_pad($latestNumber + 1, 3, '0', STR_PAD_LEFT);
     }
 
     public function render()
     {
-        return view('livewire.create-document',[
-                'categories' => DocumentCategory::all(),
-                'services' => Service::all(),
-                '$users' => User::all()
+
+
+        return view('livewire.create-document', [
+            'categories' => DocumentCategory::all(),
+            'services' => Service::all(),
+            'users' => $this->users
         ]);
     }
 }

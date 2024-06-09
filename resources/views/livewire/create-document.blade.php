@@ -4,17 +4,19 @@
     <div class="">
         <x-mary-form wire:submit="save" class="bg-white border border-gray-200 rounded-lg p-12">
 
+        <x-mary-form wire:submit.prevent="save" class="bg-white border border-gray-200 rounded-lg p-12">
+
             <div wire:loading wire:target="file">
                 <x-mary-loading class="text-primary loading-lg" />
             </div>
 
             <x-mary-errors title="Oops!" description="Please, fix them." icon="o-face-frown" />
 
-
             <div class="grid grid-cols-2 gap-4">
                 <x-mary-input label="Numéro d'ordre" class="grid-colspan-1" wire:model.live="n_ordre"/>
                 <x-mary-input label="Sujet" class="grid-colspan-1" wire:model="sujet" />
             </div>
+
 
 
             <div class="grid grid-cols-2 gap-4">
@@ -38,19 +40,32 @@
                     hint="Tous les membres de ce services seront notifiés par ce document"
                 />
 
+                    wire:model.live="service"
+                />
             </div>
-            <div class="grid grid-cols-2 gap-4">
-                <x-mary-file wire:model.live="file" label="Document" hint="Only PDF" accept="application/pdf" />
-                <x-mary-textarea
-                        label="Description"
-                        wire:model="description"
-                        placeholder="Your story ..."
-                        hint="Max 1000 chars"
-                        rows="5"
-                    />
-            </div>
-            <div class="grid grid-cols- gap-4">
 
+            <div class="grid grid-cols-2 gap-4">
+                <x-mary-select
+                    label="Destinataire (Optionnel)"
+                    icon="o-user"
+                    :options="$users"
+                    option-value="id"
+                    option-label="name"
+                    placeholder="Selectionnez un destinataire (Optionnel)"
+                    wire:model="recipient"
+                    :disabled="!$service"
+                />
+                <x-mary-file wire:model.live="file" label="Document" accept="application/pdf" />
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <x-mary-textarea
+                    label="Description"
+                    wire:model="description"
+                    placeholder="Your story ..."
+                    hint="Max 1000 chars"
+                    rows="5"
+                />
             </div>
 
             <x-slot:actions>

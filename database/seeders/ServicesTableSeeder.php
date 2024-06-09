@@ -17,7 +17,6 @@ class ServicesTableSeeder extends Seeder
         Service::create(['name' => 'Ressources Humaines']);
         Service::create(['name' => 'Administration']);
         Service::create(['name' => 'Comptabilité']);
-        Service::create(['name' => 'Administration']);
         Service::create(['name' => 'Services Techniques']);
         Service::create(['name' => 'Bibliothèque']);
         Service::create(['name' => 'Informatique et Réseaux']);

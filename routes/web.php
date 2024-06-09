@@ -5,8 +5,10 @@ use App\Livewire\CreateDocument;
 use App\Livewire\ManageServices;
 use App\Livewire\ManageCategories;
 use App\Livewire\ManageUsers;
+use App\Livewire\UpdateDocument;
 use App\Livewire\ViewDocumentComponent;
 use App\Livewire\ViewDocuments;
+use Illuminate\Bus\UpdatedBatchJobCounts;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DocumentController;
 
@@ -41,6 +43,11 @@ Route::middleware([
     Route::get('/documents/all', ViewDocuments::class)->name('view-documents');
     Route::get('/files/{path}', [FilesController::class, 'show'])->where('path', '.*')->name('files.show');
     Route::get('/documents/view/{id}', ViewDocumentComponent::class)->name('documents.view');
+    Route::get('/documents/update/{id}', UpdateDocument::class)->name('documents.update');
+    Route::get('locale/{locale}', function ($locale) {
+        session(['locale' => $locale]);
+        return redirect()->back();
+    })->name('locale.switch');
 
 
 });

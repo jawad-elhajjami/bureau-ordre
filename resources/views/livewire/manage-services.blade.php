@@ -12,7 +12,7 @@
 
     <div class="bg-white dark:bg-gray-800 overflow-hidden sm:rounded-lg p-4">
         <!-- Services table -->
-
+        @if(count($services) > 0)
         <x-mary-table :headers="$headers" :rows="$services" with-pagination
             @row-click="$wire.edit($event.detail.id)" 
         >   
@@ -52,6 +52,9 @@
                 </div>
             @endscope
         </x-mary-table>
+        @else
+        @livewire('partials/no-services-to-show')
+        @endif
     
     </div>
 
