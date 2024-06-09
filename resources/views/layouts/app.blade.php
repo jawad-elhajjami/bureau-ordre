@@ -35,14 +35,7 @@
 
             {{-- Right side actions --}}
             <x-slot:actions>
-                <x-mary-dropdown>
-                    <x-slot:trigger>
-                        <x-mary-button icon="o-bell" label="Notifications" class="btn-ghost btn-sm" responsive />
-                    </x-slot:trigger>
-                 
-                    <x-mary-menu-item title="Notification 1" />
-                    <x-mary-menu-item title="Notification 2" />
-                </x-mary-dropdown>
+                
                 <x-mary-dropdown>
                     <x-slot:trigger>
                         <x-mary-button icon="o-language" label="Changez le langage" class="btn-ghost btn-sm" responsive />
@@ -63,6 +56,16 @@
                     <x-mary-menu-item title="Nord" onclick="changeTheme('nord')" />
 
                 </x-mary-dropdown>
+
+                <x-mary-dropdown>
+                    <x-slot:trigger>
+                        <x-mary-button icon="o-bell" class="btn-circle btn-outline" />
+                    </x-slot:trigger>
+                
+                    <x-mary-menu-item title="Notification 1" />
+                    <x-mary-menu-item title="Notification 2" />
+                </x-mary-dropdown>
+
             </x-slot:actions>
         </x-mary-nav>
 
@@ -93,7 +96,7 @@
 
                 {{-- Activates the menu item when a route matches the `link` property --}}
                 <x-mary-menu activate-by-route>
-                    <x-mary-menu-item title="Tableau de bord" icon="o-home" link="{{ route('dashboard') }}" wire:navigate/>
+                    <x-mary-menu-item title="Tableau de bord" icon="o-home" link="{{ route('dashboard') }}" no-wire-navigate/>
                     <x-mary-menu-sub title="Documents" icon="o-document">
                         <x-mary-menu-item title="Ajouter un document" link="{{ route('create-document') }}" icon="o-plus" />
                         <x-mary-menu-item title="Liste de documents" link="{{ route('view-documents') }}" icon="o-list-bullet" />

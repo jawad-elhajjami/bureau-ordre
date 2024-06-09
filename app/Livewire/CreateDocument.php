@@ -27,7 +27,7 @@ class CreateDocument extends Component
     public $loggedInUserId;
 
     protected $rules = [
-        'n_ordre' => 'required|min:3|max:50|string',
+        'n_ordre' => 'required|min:3|max:50|string|unique:documents,order_number',
         'sujet' => 'required|min:3|max:255|string',
         'description' => 'nullable|min:3|max:255|string',
         'file' => 'required|file|max:2048',

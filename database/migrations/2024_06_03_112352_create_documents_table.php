@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('documents', function (Blueprint $table) {
             $table->id();
             $table->string('order_number');
+            $table->unique('order_number');
             $table->string('subject', 255);
             $table->string('file_path', 255);
             $table->text('description')->nullable();
@@ -23,7 +24,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained('users');
             $table->foreignId('category_id')->constrained('document_categories');
             $table->unsignedBigInteger('recipient_id')->nullable();
-            $table->foreign('recipient_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('recipient_id')->references('id')->on('users')->onDelete('set null');
             $table->timestamps();
         });
     }
