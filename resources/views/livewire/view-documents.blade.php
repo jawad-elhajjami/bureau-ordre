@@ -1,4 +1,5 @@
 <div>
+
     <x-mary-header title="Documents" subtitle="Gérez vos documents">
         <x-slot:middle class="!justify-end">
             <x-mary-input icon="o-bolt" wire:model.live="search" placeholder="Search..." />
@@ -9,6 +10,7 @@
     </x-mary-header>  
     <div class="bg-white dark:bg-gray-800 overflow-hidden sm:rounded-lg p-4">
         <x-mary-tabs wire:model="selectedTab" class="mb-4">
+            <x-mary-loading class="text-primary" wire:loading wire:target="search" class="m-8"/>
             <x-mary-tab name="incoming" icon="o-document-arrow-down">
                 <x-slot:label>  
                     Arrivée

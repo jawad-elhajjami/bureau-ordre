@@ -145,6 +145,7 @@
                             @if(count($otherDocuments) > 0)
                                 @foreach ($otherDocuments as $otherDocument)
                                     <!-- Display each document as a list item -->
+                                    @can('view-document', $otherDocument)
                                     <x-mary-list-item separator hover :item="$otherDocument">
                                         <x-slot:value>
                                             {{ $otherDocument->subject }}
@@ -154,6 +155,7 @@
                                             <x-mary-button  class="btn-sm btn-ghost" icon="o-link" no-wire-navigate external link="{{ $otherDocument->id }}"/>
                                         </x-slot:sub-value>
                                     </x-mary-list-item>
+                                    @endcan
                                 @endforeach
                                 @else
                                     <p class="text-sm text-gray-600">{{ "Rien a afficher" }}</p>

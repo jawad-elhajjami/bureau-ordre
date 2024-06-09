@@ -52,9 +52,13 @@ class ManageUsers extends Component
 
     public function edit($id){
         $user = User::find($id);
-        $this->form->setUser($user);
-        $this->editMode = true;
-        $this->userModal = true;
+        if($user->non_deletable == 1){
+            abort(403, "You can't modify this user's data");
+        }else{
+            $this->form->setUser($user);
+            $this->editMode = true;
+            $this->userModal = true;
+        }
     }
 
     // method to delete user

@@ -24,6 +24,7 @@
             <!-- Users table -->
  
             {{-- You can use any `$wire.METHOD` on `@row-click` --}}
+            @if(count($users) > 0)
             <x-mary-table 
                 :headers="$headers" 
                 :rows="$users" 
@@ -51,10 +52,16 @@
 
                     @scope('actions', $user) 
                     <div class="flex gap-1">
-                        <x-mary-button icon="o-trash" wire:click="delete({{ $user->id }})" spinner class="btn-sm btn-ghost text-red-600"  />
+                        @if($user->id !== auth()->user()->id && $user->non_deletable == 0)
+                            <x-mary-button icon="o-trash" wire:click="delete({{ $user->id }})" wire:confirm="Vous-êtes sûr de supprimer cet utilisateur ?" spinner class="btn-sm btn-ghost text-red-600"  />
+                        @endif
                     </div>
                     @endscope
             </x-mary-table>
+            @else
+                @livewire('partials/no-users-to-show')
+            @endif
+            
         
         </div>
     </div>
