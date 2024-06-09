@@ -45,6 +45,14 @@
                 </x-mary-dropdown>
                 <x-mary-dropdown>
                     <x-slot:trigger>
+                        <x-mary-button icon="o-language" label="Changez le langage" class="btn-ghost btn-sm" responsive />
+                    </x-slot:trigger>
+                 
+                    <x-mary-menu-item title="Arabe" link="{{ route('locale.switch', 'ar') }}" no-wire-navigate />
+                    <x-mary-menu-item title="Français" link="{{ route('locale.switch', 'fr') }}" no-wire-navigate />
+                </x-mary-dropdown>
+                <x-mary-dropdown>
+                    <x-slot:trigger>
                         <x-mary-button icon="o-computer-desktop" label="Changez le theme" class="btn-ghost btn-sm" responsive />
                     </x-slot:trigger>
                  

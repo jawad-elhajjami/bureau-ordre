@@ -1,17 +1,14 @@
 <div class="container">
     <div class="flex items-center w-full justify-between mb-4 p-4">
         <h1 class="text-2xl font-bold">{{ $document->subject }}</h1>
-        
-        <div class="flex gap-4 items-center">
+        <div class="controls flex gap-4 items-center">
             <x-mary-button id="prev-page" icon="o-arrow-left"  class="btn-sm btn-primary"/>
             <input id="page-input" type="number" min="1" value="1" class="border border-gray-200 rounded-lg px-4 py-2">
             <span>/ <span id="page-count"></span></span>
             <x-mary-button id="next-page" icon="o-arrow-right" class="btn-sm btn-primary"/>
         </div>
 
-        <div class="controls">
-            
-            
+        <div class="controls"> 
             <x-mary-button id="zoom-in" icon="o-magnifying-glass-plus" class="btn-secondary btn-sm"/>
             <x-mary-button id="zoom-out" icon="o-magnifying-glass-minus" class="btn-secondary btn-sm"/>
             <x-mary-button label="Imprimer" icon="o-printer" class="btn-sm btn-primary" onclick="printPdf()" />
@@ -30,11 +27,12 @@
                                     {{ $label }}
                                 </x-slot:value>
                                 <x-slot:sub-value>
-                                    @if ($column == 'service_id')
+                                    @if ($column == 'service_id' && $document->service)
                                         <x-mary-badge value="{{ $document->service->name }}" class="badge-warning" />
-                                    @elseif ($column == 'category_id')
+                                    @elseif ($column == 'category_id' && $document->category)
                                         <x-mary-badge value="{{ $document->category->category_name }}" class="badge-error" />
-                                        
+                                    @elseif ($column == 'recipient_id' && $document->recipient)
+                                        <x-mary-badge value="{{ $document->recipient->name }}" class="badge-primary" />
                                     @else
                                         {{ $document->$column }}
                                     @endif
@@ -96,29 +94,49 @@
                     @if ($notes->count() > 0)
                     <ul class="mt-4 overflow-y-scroll h-[300px]" id="notes-container">
                         @foreach ($notes as $note)
+                            @if($note->writer !== NULL)
                             <x-mary-list-item :key="$note->id" :item="$note" separator hover>
                                 <x-slot:avatar>
                                     <x-mary-popover>
                                         <x-slot:trigger>
-                                            <div class="w-9 h-9 text-sm font-bold text-white flex items-center justify-center rounded-full border border-gray-300" style="color:#fff;background-color: {{ $note->writer->color ?? 'rgb(168,85,247)' }};">{{ $note->writer->initials }}</div>
+                                            @if($note->writer != NULL)
+                                                <div class="w-9 h-9 text-sm font-bold text-white flex items-center justify-center rounded-full border border-gray-300" style="color:#fff;background-color: {{ $note->writer->color ?? 'rgb(168,85,247)' }};">{{ $note->writer->initials }}</div>
+                                            @else
+                                                <x-mary-icon name="o-user"  class="w-8 h-8 m-8"/>
+                                            @endif
                                         </x-slot:trigger>
                                         <x-slot:content>
-                                            Nom: {{ $note->writer->name }} <br>
-                                            E-mail: {{ $note->writer->email }}
+                                            @if($note->writer != NULL)
+                                                Nom: {{ $note->writer->name }} <br>
+                                                E-mail: {{ $note->writer->email }}
+                                            @else
+                                                {{ __("Utilisateur supprimé") }}
+                                            @endif
                                         </x-slot:content>
                                     </x-mary-popover>
                                 </x-slot:avatar>
                                 <x-slot:value>
-                                    {{ $note->content }}
+                                    @if(auth()->user()->id == $note->writer->id)
+                                        {{ $note->writer !== NULL ? $note->writer->name : "Utilsateur supprimé" }}
+                                        <x-mary-badge value="Vous" class="badge-primary" />
+                                    @else
+                                        {{ $note->writer !== NULL ? $note->writer->name : "Utilsateur supprimé" }}
+                                    @endif
                                 </x-slot:value>
+                                <x-slot:sub-value>
+                                    {{ $note->content }}
+                                </x-slot:sub-value>
+                                @can('delete-note', $note)
                                 <x-slot:actions>
                                     <x-mary-button icon="o-trash" class="btn-sm" wire:click="deleteNote({{ $note->id }})" spinner/>
                                 </x-slot:actions>
+                                @endcan
                             </x-mary-list-item>
+                            @endif
                         @endforeach
                     </ul>
                     @else
-                    <p>Rien a afficher</p>
+                    <p>{{ __("Rien a afficher") }}</p>
                     @endif
                 </x-mary-tab>
                 <x-mary-tab name="sender" label="Emetteur">
@@ -132,8 +150,6 @@
                                             {{ $otherDocument->subject }}
                                         </x-slot:value>
                                         <x-slot:sub-value>
-                                            <!-- Display additional information about the document -->
-                                            <!-- You can customize this part based on your needs -->
                                             Créé le {{ $otherDocument->created_at->format('d/m/Y') }}
                                             <x-mary-button  class="btn-sm btn-ghost" icon="o-link" no-wire-navigate external link="{{ $otherDocument->id }}"/>
                                         </x-slot:sub-value>
@@ -145,25 +161,35 @@
                         <x-slot:figure>
                             <x-mary-popover>
                                 <x-slot:trigger>
-                                    <div class="m-8 w-20 h-20 text-lg font-bold text-white flex items-center justify-center rounded-full border border-gray-300" style="color:#fff;background-color: {{ $document->owner->color ?? 'rgb(168,85,247)' }};">{{ $document->owner->initials }}</div>
+                                    @if($document->owner != null)
+                                        <div class="m-8 w-20 h-20 text-lg font-bold text-white flex items-center justify-center rounded-full border border-gray-300" style="color:#fff;background-color: {{ $document->owner->color ?? 'rgb(168,85,247)' }};">{{ $document->owner->initials }}</div>
+                                    @else
+                                            <x-mary-icon name="o-user"  class="w-8 h-8 m-8"/>
+                                    @endif
                                 </x-slot:trigger>
                                 <x-slot:content>
-                                    Nom: {{ $document->owner->name }} <br>
-                                    E-mail: {{ $document->owner->email }}
+                                    @if($document->owner != null)
+                                        Nom: {{ $document->owner->name }} <br>
+                                        E-mail: {{ $document->owner->email }}
+                                    @else
+                                        {{ __("Utilisateur supprimé") }}
+                                    @endif
                                 </x-slot:content>
                             </x-mary-popover>
                         </x-slot:figure>
-
                     </x-mary-card>
                 </x-mary-tab>
             </x-mary-tabs>
-        </div>    
-        {{-- <embed src="{{ $this->getDocumentUrl() }}#toolbar=0" type="application/pdf" class="h-screen w-full" /> --}}
+        </div>  
+
+            <embed id="pdf-embed" src="{{ $this->getDocumentUrl() }}" type="application/pdf" class="h-screen col-span-3 w-full hidden" />
             <div id="pdf-viewer-container" class="h-fit flex items-center justify-center overflow-auto col-span-3 "></div>
 
-                <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js"></script>
                 <script>
-
+                    function handlePdfJsError() {
+                        document.getElementById('pdf-viewer-container').style.display = 'none';
+                        document.getElementById('pdf-embed').style.display = 'block';
+                    }
                     function printPdf() {
                         const url = '{{ $this->getDocumentUrl() }}';
                         const printWindow = window.open(url, '_blank');
@@ -263,9 +289,10 @@
                         }
                     }
 
-                    document.addEventListener('DOMContentLoaded', initializePdfViewer);;
+                    document.addEventListener('DOMContentLoaded', initializePdfViewer);
                     
                 </script>
+                 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js" onerror="handlePdfJsError()"></script>
                 @script
                 <script>
                     $wire.on('refresh-view', () => {

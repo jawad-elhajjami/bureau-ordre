@@ -66,7 +66,8 @@ class UserForm extends Form
     }
 
 
-    public function update(){
+    public function update()
+    {
         // validate form
         $validated = $this->validate([
             'fullName' => 'required|min:3|max:50|string',
@@ -81,17 +82,26 @@ class UserForm extends Form
         if (Gate::denies('can-manage-users')) {
             abort(403, 'Unauthorized');
         }
-        else{
-            $this->user->update([
-                'name' => $this->fullName,
-                'email' => $this->email,
-                'password' => Hash::make($this->password),
-                'role_id' => $this->role_id,
-                'service_id' => $this->service_id
-            ]);
-            // reset form fields
-            $this->reset();
-        } 
+
+        // Assemble the data array for update
+        $data = [
+            'name' => $this->fullName,
+            'email' => $this->email,
+            'role_id' => $this->role_id,
+            'service_id' => $this->service_id
+        ];
+
+        // Conditionally add the password if it is specified
+        if (!empty($this->password)) {
+            $data['password'] = Hash::make($this->password);
+        }
+
+        // Update the user with the assembled data
+        $this->user->update($data);
+
+        // reset form fields
+        $this->reset();
     }
+
 
 }

@@ -17,13 +17,13 @@ return new class extends Migration
             $table->string('subject', 255);
             $table->string('file_path', 255);
             $table->text('description')->nullable();
-            // $table->enum('status', ['draft', 'submitted', 'approved', 'rejected']);
             $table->enum('importance_level', ['low', 'medium', 'high'])->nullable();
             $table->integer('opt_code')->nullable();
-            // $table->foreignId('submitted_by')->constrained('users');
             $table->foreignId('service_id')->constrained('services');
             $table->foreignId('user_id')->constrained('users');
             $table->foreignId('category_id')->constrained('document_categories');
+            $table->unsignedBigInteger('recipient_id')->nullable();
+            $table->foreign('recipient_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -34,5 +34,9 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('documents');
+        Schema::table('documents', function (Blueprint $table) {
+            $table->dropForeign(['recipient_id']);
+            $table->dropColumn('recipient_id');
+        });
     }
 };

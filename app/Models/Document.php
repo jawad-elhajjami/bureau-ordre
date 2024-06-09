@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -7,8 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Document extends Model
 {
-
-
     use HasFactory;
 
     protected $fillable = [
@@ -18,7 +15,8 @@ class Document extends Model
         'description',
         'user_id',
         'service_id',
-        'category_id',
+        'recipient_id',
+        'category_id'
     ];
 
     public function owner()
@@ -36,16 +34,14 @@ class Document extends Model
         return $this->belongsTo(DocumentCategory::class);
     }
 
+    public function recipient()  // Add this method
+    {
+        return $this->belongsTo(User::class, 'recipient_id');
+    }
+
     protected static function boot()
     {
         parent::boot();
-
-        static::creating(function ($document) {
-            // Generate the n_ordre field value
-            $yearMonth = date('Y_m');
-            $latestId = static::latest()->value('id') ?? 0;
-            $document->order_number = $yearMonth . '_N' . str_pad($latestId + 1, 3, '0', STR_PAD_LEFT);
-        });
     }
 
 }

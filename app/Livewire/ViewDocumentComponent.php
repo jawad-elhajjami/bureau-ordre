@@ -3,7 +3,7 @@
 namespace App\Livewire;
 
 use App\Models\Document;
-use App\Models\note as ModelsNote;
+use App\Models\note;
 use Exception;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
@@ -39,6 +39,7 @@ class ViewDocumentComponent extends Component
         'service_id' => 'Service conçu',
         'description' => 'Description',
         'subject' => 'Sujet',
+        'recipient_id' => 'Employé conçu',
         'created_at' => 'Date de création',
         'updated_at' => 'Date de modification',
         // Add other columns as needed
@@ -68,7 +69,7 @@ class ViewDocumentComponent extends Component
         $this->validate();
 
         try{
-            ModelsNote::create([
+            Note::create([
                 'user_id' => auth()->user()->id,
                 'document_id' => $this->document->id,
                 'content' => $this->note
@@ -82,20 +83,15 @@ class ViewDocumentComponent extends Component
     }
 
     public function deleteNote($id){
-        $note = ModelsNote::findOrFail($id);
+        $note = Note::findOrFail($id);
+        if (Gate::denies('delete-note', $note)) {
+            abort(403, "You are not authorized to delete this note.");
+        }
         $note->delete();
         $this->error('Note '. $note->id . ' supprimé');
         $this->dispatch('refresh-view');
     }
 
-
-    public function render()
-    {
-        return view('livewire.view-document-component',[
-            'notes' => ModelsNote::where('document_id', $this->document->id)->get(),
-            'notes_count' =>  ModelsNote::where('document_id', $this->document->id)->count()
-        ]);
-    }
 
     public function getDocumentUrl()
     {
@@ -129,6 +125,14 @@ class ViewDocumentComponent extends Component
         }
     }
 
+
+    public function render()
+    {
+        return view('livewire.view-document-component',[
+            'notes' => Note::where('document_id', $this->document->id)->get(),
+            'notes_count' =>  note::where('document_id', $this->document->id)->count()
+        ]);
+    }
     
 
 }
