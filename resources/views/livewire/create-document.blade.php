@@ -2,8 +2,6 @@
     <x-mary-header title="Créer un document" subtitle="Spécifiez les informations nécessaires" separator />
 
     <div class="">
-        <x-mary-form wire:submit="save" class="bg-white border border-gray-200 rounded-lg p-12">
-
         <x-mary-form wire:submit.prevent="save" class="bg-white border border-gray-200 rounded-lg p-12">
 
             <div wire:loading wire:target="file">
@@ -16,8 +14,6 @@
                 <x-mary-input label="Numéro d'ordre" class="grid-colspan-1" wire:model.live="n_ordre"/>
                 <x-mary-input label="Sujet" class="grid-colspan-1" wire:model="sujet" />
             </div>
-
-
 
             <div class="grid grid-cols-2 gap-4">
                 <x-mary-select
@@ -36,10 +32,6 @@
                     option-value="id"
                     option-label="name"
                     placeholder="Selectionnez un service"
-                    wire:model="service"
-                    hint="Tous les membres de ce services seront notifiés par ce document"
-                />
-
                     wire:model.live="service"
                 />
             </div>
@@ -71,13 +63,6 @@
             <x-slot:actions>
                 <x-mary-button label="Créer" class="btn-primary" type="submit" spinner="save" :disabled="$file ? null : 'disabled'" />
             </x-slot:actions>
-
         </x-mary-form>
-
-
-
     </div>
-
-
-
 </div>
