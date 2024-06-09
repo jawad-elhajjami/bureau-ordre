@@ -17,7 +17,7 @@ class ViewDocuments extends Component
     public $search = '';
     public array $sortBy = ['column' => 'order_number', 'direction' => 'asc'];
 
-    
+
     public function sortBy($column)
     {
         if ($this->sortBy['column'] === $column) {
@@ -40,7 +40,7 @@ class ViewDocuments extends Component
         ];
         // Start building the query
         $documentsQuery = Document::query();
-        
+
         if (!empty($this->search)) {
             $documentsQuery->where(function ($query) {
                 $query->where('subject', 'like', '%' . $this->search . '%')

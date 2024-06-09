@@ -7,15 +7,15 @@
         <x-slot:actions>
             <x-mary-button icon="o-funnel" class="btn-primary" @click="$wire.filtersDrawer = true"/>
         </x-slot:actions>
-    </x-mary-header>  
-    
+    </x-mary-header>
+
     <div class="bg-white dark:bg-gray-800 overflow-hidden sm:rounded-lg p-4">
         <x-mary-table :headers="$headers" :rows="$documents" striped @row-click="alert($event.detail.subject)" :sort-by="$sortBy">
             @scope('cell_sent_by', $document)
-            
+
             @if(auth()->user()->id == $document->owner->id)
             <x-mary-badge value="Vous" class="badge-primary" />
-            @else 
+            @else
             <x-mary-popover>
                 <x-slot:trigger>
                     <div class="w-9 h-9 text-sm font-bold text-white flex items-center justify-center rounded-full border border-gray-400" style="background-color: {{ $document->owner->color ?? 'rgb(168,85,247)' }};">{{ $document->owner->initials }}</div>
@@ -28,7 +28,7 @@
             @endif
 
             @endscope
-            @scope('actions', $document) 
+            @scope('actions', $document)
             <div class="flex gap-1">
                 <x-mary-button icon="o-eye" link="{{ route('documents.view', $document->id) }}" no-wire-navigate class="btn-sm btn-ghost "  />
                 <x-mary-button icon="o-arrow-down-tray" link="{{ route('files.show', ['path' => $document->file_path]) }}" external class="btn-sm btn-ghost "/>
@@ -49,7 +49,7 @@
         right
     >
     <div>Hey!</div>
- 
+
     <x-slot:actions>
         <x-mary-button label="Cancel" @click="$wire.filtersDrawer = false" />
         <x-mary-button label="Confirm" class="btn-primary" icon="o-check" />

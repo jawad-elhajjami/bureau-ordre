@@ -8,6 +8,7 @@ use App\Livewire\ManageUsers;
 use App\Livewire\ViewDocumentComponent;
 use App\Livewire\ViewDocuments;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\DocumentController;
 
 /*
 |--------------------------------------------------------------------------

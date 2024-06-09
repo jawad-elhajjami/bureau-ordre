@@ -87,7 +87,7 @@ class User extends Authenticatable
 
         return $initials;
     }
-    
+
     protected static function boot()
     {
         parent::boot();
