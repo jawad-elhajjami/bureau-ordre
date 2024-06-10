@@ -189,6 +189,9 @@
 
                 <script>
                     function handlePdfJsError() {
+                        document.querySelectorAll('.controls').forEach(element => {
+                            element.style.display = 'none'
+                        });
                         document.getElementById('pdf-viewer-container').style.display = 'none';
                         document.getElementById('pdf-embed').style.display = 'block';
                     }

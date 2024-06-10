@@ -13,14 +13,9 @@ class OutgoingDocuments extends Component
     use WithPagination;
     use Toast;
 
-    public $search;
+    public $search = '';
     public array $sortBy = ['column' => 'order_number', 'direction' => 'asc'];
-
-    public function mount($search)
-    {
-        $this->search = $search;
-    }
-
+    
     #[On('search-changed')]
     public function searchChanged($value)
     {
@@ -64,7 +59,8 @@ class OutgoingDocuments extends Component
             ['key' => 'order_number', 'label' => 'N ordre', 'sortable' => true],
             ['key' => 'subject', 'label' => 'Sujet', 'sortable' => true],
             ['key' => 'description', 'label' => 'Description', 'sortable' => true],
-            ['key' => 'sent_by', 'label' => 'Envoyé par', 'sortable' => true],
+            ['key' => 'sent_by', 'label' => 'Envoyé par', 'sortable' => false],
+            ['key' => 'created_at', 'label' => 'Envoyé le', 'sortable' => true]
         ];
 
         // Start building the query

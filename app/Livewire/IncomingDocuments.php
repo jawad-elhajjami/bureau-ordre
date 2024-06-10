@@ -13,23 +13,14 @@ class IncomingDocuments extends Component
     use WithPagination;
     use Toast;
 
-    public $search;
+    public $search = '';
     public $incomingDocumentsCount;
     public array $sortBy = ['column' => 'order_number', 'direction' => 'asc'];
-
-
-    public function mount($search)
-    {
-        $this->search = $search;
-    }
 
     #[On('search-changed')]
     public function searchChanged($value)
     {
-        // Access the value sent with the event
         $this->search = $value;
-        // Perform any other actions based on the search value
-        // For example, you can call other methods or update other properties
     }
 
     public function sortBy($column)
@@ -42,27 +33,18 @@ class IncomingDocuments extends Component
         }
     }
 
-    
-
     public function deleteDocument($id)
     {
         $document = Document::findOrFail($id);
-        
-        // Check if the user has permission to delete the document
+
         if (!auth()->user()->can('delete-document', $document)) {
-            // Unauthorized, display error message
             $this->error("You are not authorized to delete this document.");
             return;
         }
 
-        // Delete the document
         $document->delete();
-        
-        // Display success message
         $this->success("Document ({$document->subject}) supprimé.");
-
         $this->dispatch('incomingDocumentDeleted');
-
     }
 
     public function render()
@@ -72,15 +54,24 @@ class IncomingDocuments extends Component
             ['key' => 'order_number', 'label' => 'N ordre', 'sortable' => true],
             ['key' => 'subject', 'label' => 'Sujet', 'sortable' => true],
             ['key' => 'description', 'label' => 'Description', 'sortable' => true],
-            ['key' => 'sent_by', 'label' => 'Envoyé par', 'sortable' => true],
+            ['key' => 'sent_by', 'label' => 'Envoyé par', 'sortable' => false],
+            ['key' => 'created_at', 'label' => 'Envoyé le', 'sortable' => true]
         ];
 
-        // Start building the query
         $documentsQuery = Document::query();
         $user = auth()->user();
+
+        $documentsQuery->where(function ($query) use ($user) {
+            // Include documents specifically sent to the user
+            $query->where('recipient_id', $user->id);
+            
+            // Include documents sent to the user's service if recipient_id is null
+            $query->orWhere(function ($query) use ($user) {
+                $query->whereNull('recipient_id')
+                      ->where('service_id', $user->service_id);
+            });
+        });
         
-        // Filter for incoming documents
-        $documentsQuery->where('service_id', $user->service_id)->orWhere('recipient_id', auth()->user()->id);
 
         if (!empty($this->search)) {
             $documentsQuery->where(function ($query) {
@@ -89,16 +80,16 @@ class IncomingDocuments extends Component
                     ->orWhere('description', 'like', '%' . $this->search . '%');
             });
         }
-        
 
-        // Sorting
         $documents = $documentsQuery
             ->orderBy($this->sortBy['column'], $this->sortBy['direction'])
             ->paginate(4);
 
+        
+        
         $this->incomingDocumentsCount = $documents->count();
         $this->dispatch('count-changed', count: $this->incomingDocumentsCount);
-        
+
         return view('livewire.incoming-documents', [
             'documents' => $documents,
             'headers' => $headers,

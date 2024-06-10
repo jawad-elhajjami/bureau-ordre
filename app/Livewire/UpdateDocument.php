@@ -44,7 +44,6 @@ class UpdateDocument extends Component
         if (Gate::denies('update-document', $this->document)) {
             abort(403, "You are not authorized to update this document.");
         }
-
         $this->n_ordre = $this->document->order_number;
         $this->sujet = $this->document->subject;
         $this->description = $this->document->description;
@@ -52,11 +51,10 @@ class UpdateDocument extends Component
         $this->category = $this->document->category_id;
         $this->recipient = $this->document->recipient_id;
         $this->service = $this->document->service_id;
-
+        
         $this->users = User::where('service_id', $this->service)
         ->where('id', '!=', $this->loggedInUserId) // Exclude the logged-in user
         ->get();
-        $this->recipient = null; // Reset recipient when service changes
 
     }
 
