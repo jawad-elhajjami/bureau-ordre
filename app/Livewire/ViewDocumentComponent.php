@@ -23,15 +23,15 @@ class ViewDocumentComponent extends Component
 
     // Add the $persist property to maintain Livewire state across navigation actions
     protected $persist = true;
-    
+
     public $selectedTab = 'details';
     public $metadata = [];
     public $otherDocuments = [];
     public $content = '';
-    
-    #[Validate('required|min:3|max:1000|string')] 
+
+    #[Validate('required|min:3|max:1000|string')]
     public $note;
-    
+
 
     public $columns = [
         'order_number' => 'N ordre',
@@ -108,22 +108,26 @@ class ViewDocumentComponent extends Component
             $parser = new Parser();
             $pdf = $parser->parseFile($filePath);
 
-            if($pdf->getDetails()) {
-                $this->metadata = $pdf->getDetails();
-                $this->content = $pdf->getText();
-                if($this->content != null){
-                    $this->content = $pdf->getText();
-                }else{
-                    $this->content = null;
-                }
-            } else {
-                $this->metadata = null;
-            }
+            // Get PDF metadata
+            $pdfMetadata = $pdf->getDetails();
+            $pdfText = $pdf->getText();
+
+            // Get additional file information
+            $fileInfo = [
+                'original_file_name' => $this->document->file_path, // assuming the file_path stores the original name
+                'file_size' => Storage::disk('files')->size($this->document->file_path),
+                'mime_type' => Storage::disk('files')->mimeType($this->document->file_path),
+                'md5_checksum' => md5_file($filePath),
+            ];
+
+            $this->metadata = array_merge($pdfMetadata ?: [], $fileInfo);
+            $this->content = $pdfText ?: null;
         } catch (\Exception $e) {
             \Log::error('Error parsing PDF:', [$e->getMessage()]);
             $this->metadata = null;
         }
     }
+
 
 
     public function render()
@@ -133,6 +137,6 @@ class ViewDocumentComponent extends Component
             'notes_count' =>  note::where('document_id', $this->document->id)->count()
         ]);
     }
-    
+
 
 }
