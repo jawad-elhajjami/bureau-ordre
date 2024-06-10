@@ -95,6 +95,9 @@ class User extends Authenticatable
         static::creating(function ($user) {
             $user->color = self::generateRandomColor();
         });
+        static::deleting(function ($user) {
+            Document::where('recipient_id', $user->id)->update(['recipient_id' => null]);
+        });
     }
 
     private static function generateRandomColor()

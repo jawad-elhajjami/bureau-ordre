@@ -35,14 +35,7 @@
 
             {{-- Right side actions --}}
             <x-slot:actions>
-                <x-mary-dropdown>
-                    <x-slot:trigger>
-                        <x-mary-button icon="o-bell" label="Notifications" class="btn-ghost btn-sm" responsive />
-                    </x-slot:trigger>
-                 
-                    <x-mary-menu-item title="Notification 1" />
-                    <x-mary-menu-item title="Notification 2" />
-                </x-mary-dropdown>
+                
                 <x-mary-dropdown>
                     <x-slot:trigger>
                         <x-mary-button icon="o-language" label="Changez le langage" class="btn-ghost btn-sm" responsive />
@@ -63,6 +56,16 @@
                     <x-mary-menu-item title="Nord" onclick="changeTheme('nord')" />
 
                 </x-mary-dropdown>
+
+                <x-mary-dropdown>
+                    <x-slot:trigger>
+                        <x-mary-button icon="o-bell" class="btn-circle btn-outline" />
+                    </x-slot:trigger>
+                
+                    <x-mary-menu-item title="Notification 1" />
+                    <x-mary-menu-item title="Notification 2" />
+                </x-mary-dropdown>
+
             </x-slot:actions>
         </x-mary-nav>
 
@@ -82,7 +85,7 @@
 
                                 <x-nav-link href="{{ route('logout') }}"
                                                @click.prevent="$root.submit();">
-                                    {{ __('Log Out') }}
+                                    {{ __('messages.logout_button_text') }}
                                 </x-nav-link>
                             </form>
                         </x-slot:actions>
@@ -93,17 +96,20 @@
 
                 {{-- Activates the menu item when a route matches the `link` property --}}
                 <x-mary-menu activate-by-route>
-                    <x-mary-menu-item title="Tableau de bord" icon="o-home" link="{{ route('dashboard') }}" wire:navigate/>
-                    <x-mary-menu-sub title="Documents" icon="o-document">
-                        <x-mary-menu-item title="Ajouter un document" link="{{ route('create-document') }}" icon="o-plus" />
-                        <x-mary-menu-item title="Liste de documents" link="{{ route('view-documents') }}" icon="o-list-bullet" />
+                    <x-mary-menu-item title="{{ __('messages.menu_dashboard_title') }}" icon="o-home" link="{{ route('dashboard') }}" no-wire-navigate/>
+                    <x-mary-menu-sub title="{{ __('messages.menu_manage_documents_title') }}" icon="o-document">
+                        <x-mary-menu-item title="{{ __('messages.menu_share_document_title') }}" link="{{ route('create-document') }}" icon="o-paper-airplane" />
+                        <x-mary-menu-item title="{{ __('messages.menu_list_documents_title') }}" link="{{ route('view-documents') }}" icon="o-inbox" />
+                        @if(Auth::user() && Auth::user()->role->name == 'admin')
+                            <x-mary-menu-item title="{{ __('messages.menu_all_documents_title') }}" link="{{ route('documents.all') }}" icon="o-list-bullet" />
+                        @endif
                     </x-mary-menu-sub>
-                    @if(Auth::user() && Auth::user()->role->name == 'admin')
-                        <x-mary-menu-item title="Gérer les utilisateurs" icon="o-user" link="{{ route('manage-users') }}" wire:navigate/>
-                        <x-mary-menu-item title="Services" icon="o-building-office" link="{{ route('manage-services') }}" wire:navigate/>
-                        <x-mary-menu-item title="Catégories de documents" icon="o-folder" link="{{ route('manage-categories') }}" wire:navigate />
+                        @if(Auth::user() && Auth::user()->role->name == 'admin')
+                        <x-mary-menu-item title="{{ __('messages.menu_manage_users_title') }}" icon="o-user" link="{{ route('manage-users') }}" wire:navigate/>
+                        <x-mary-menu-item title="{{  __('messages.menu_manage_services_title') }}" icon="o-building-office" link="{{ route('manage-services') }}" wire:navigate/>
+                        <x-mary-menu-item title="{{ __('messages.menu_manage_categories_title') }}" icon="o-folder" link="{{ route('manage-categories') }}" wire:navigate />
                     @endif
-                    <x-mary-menu-item title="Paramètres" icon="o-cog-6-tooth" link="{{ route('profile.show') }}" />
+                    <x-mary-menu-item title="{{ __('messages.menu_settings_title') }}" icon="o-cog-6-tooth" link="{{ route('profile.show') }}" />
                 </x-mary-menu>
             </x-slot:sidebar>
 
