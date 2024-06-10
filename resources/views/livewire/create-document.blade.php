@@ -2,7 +2,7 @@
     <x-mary-header title="Créer un document" subtitle="Spécifiez les informations nécessaires" separator />
 
     <div class="">
-        <x-mary-form wire:submit.prevent="save" class="bg-white border border-gray-200 rounded-lg p-12">
+        <x-mary-form wire:submit.prevent="save" class="bg-white border border-gray-200 rounded-lg p-4 sm:p-8 lg:p-12">
             
             <div wire:loading wire:target="file">
                 <x-mary-loading class="text-primary loading-lg" />
@@ -10,12 +10,12 @@
 
             <x-mary-errors title="Oops!" description="Please, fix them." icon="o-face-frown" />
 
-            <div class="grid grid-cols-2 gap-4">
-                <x-mary-input label="Numéro d'ordre" class="grid-colspan-1" wire:model.live="n_ordre"/>
-                <x-mary-input label="Sujet" class="grid-colspan-1" wire:model="sujet" />
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <x-mary-input label="Numéro d'ordre" class="col-span-1" wire:model.live="n_ordre"/>
+                <x-mary-input label="Sujet" class="col-span-1" wire:model="sujet" />
             </div>
 
-            <div class="grid grid-cols-2 gap-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <x-mary-select 
                     label="Catégorie de document" 
                     icon="o-folder" 
@@ -36,7 +36,7 @@
                 />
             </div>
             
-            <div class="grid grid-cols-2 gap-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <x-mary-select 
                     label="Destinataire (Optionnel)" 
                     icon="o-user" 
@@ -50,7 +50,7 @@
                 <x-mary-file wire:model.live="file" label="Document" accept="application/pdf" />
             </div>
             
-            <div class="grid grid-cols-2 gap-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <x-mary-textarea
                     label="Description"
                     wire:model="description"

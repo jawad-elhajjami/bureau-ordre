@@ -23,7 +23,7 @@ return new class extends Migration
             $table->foreignId('service_id')->constrained('services');
             $table->foreignId('user_id')->constrained('users');
             $table->foreignId('category_id')->constrained('document_categories');
-            $table->unsignedBigInteger('recipient_id')->nullable();
+            $table->unsignedBigInteger('recipient_id')->nullable()->default(null);
             $table->foreign('recipient_id')->references('id')->on('users')->onDelete('set null');
             $table->timestamps();
         });

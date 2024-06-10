@@ -1,5 +1,5 @@
 <div class="container">
-    <x-mary-header title="Services" subtitle="Gérez les services">
+    <x-mary-header title="{{ __('messages.services_header_title') }}" subtitle="{{ __('messages.services_header_subtitle') }}">
             <x-slot:middle class="!justify-end">
                 <x-mary-input icon="o-bolt" wire:model.live="search" placeholder="Rechercher..." />
             </x-slot:middle>

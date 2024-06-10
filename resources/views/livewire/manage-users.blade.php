@@ -1,8 +1,6 @@
 
 <div class="container">
     <div>
-        
-
         <!-- Loading animation -->
         <div class="relative flex items-center justify-center">
             <x-mary-loading 

@@ -4,6 +4,7 @@ use App\Http\Controllers\FilesController;
 use App\Livewire\CreateDocument;
 use App\Livewire\ManageServices;
 use App\Livewire\ManageCategories;
+use App\Livewire\ManageDocuments;
 use App\Livewire\ManageUsers;
 use App\Livewire\UpdateDocument;
 use App\Livewire\ViewDocumentComponent;
@@ -38,15 +39,16 @@ Route::middleware([
     Route::get('/manage-users', ManageUsers::class)->name('manage-users')->middleware('role:admin');
     Route::get('/manage-services', ManageServices::class)->name('manage-services')->middleware('role:admin');
     Route::get('/manage-categories', ManageCategories::class)->name('manage-categories')->middleware('role:admin');
-    Route::get('/documents/create', CreateDocument::class)->name('create-document');
-    Route::get('/documents/all', ViewDocuments::class)->name('view-documents');
+    Route::get('/document/create', CreateDocument::class)->name('create-document');
+    Route::get('/inbox', ViewDocuments::class)->name('view-documents');
     Route::get('/files/{path}', [FilesController::class, 'show'])->where('path', '.*')->name('files.show');
-    Route::get('/documents/view/{id}', ViewDocumentComponent::class)->name('documents.view');
-    Route::get('/documents/update/{id}', UpdateDocument::class)->name('documents.update');
+    Route::get('/document/view/{id}', ViewDocumentComponent::class)->name('documents.view');
+    Route::get('/document/update/{id}', UpdateDocument::class)->name('documents.update');
     Route::get('locale/{locale}', function ($locale) {
         session(['locale' => $locale]);
         return redirect()->back();
     })->name('locale.switch');
+    Route::get('/documents/view/all', ManageDocuments::class)->name('documents.all')->middleware('role:admin');
 
 
 });

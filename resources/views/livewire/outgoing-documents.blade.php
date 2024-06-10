@@ -29,7 +29,7 @@
                     <x-mary-button icon="o-pencil" link="{{ route('documents.update', ['id' => $document->id ]) }}" external class="btn-sm btn-ghost "/>
                 @endcan
                 @can('delete-document', $document)
-                    <x-mary-button icon="o-trash" spinner class="btn-sm btn-ghost" spinner wire:click="deleteDocument({{ $document->id }})"/>
+                    <x-mary-button icon="o-trash" spinner class="btn-sm btn-ghost" spinner wire:click="deleteDocument({{ $document->id }})" wire:confirm="Vous êtes sûr de supprimer cet document ?"/>
                 @endcan
             </div>
         @endscope
