@@ -16,7 +16,9 @@ class Document extends Model
         'user_id',
         'service_id',
         'recipient_id',
-        'category_id'
+        'category_id',
+        'otp_code',
+        'requires_otp'
     ];
 
     public function owner()

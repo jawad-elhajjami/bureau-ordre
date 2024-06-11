@@ -70,6 +70,11 @@ class User extends Authenticatable
         return $this->belongsTo(Service::class);
     }
 
+    public function getIsAdminAttribute()
+    {
+        return $this->role_id ===  1;
+    }
+
 
     /**
      * Get the initials of the user's name.
@@ -87,7 +92,7 @@ class User extends Authenticatable
 
         return $initials;
     }
-    
+
     protected static function boot()
     {
         parent::boot();

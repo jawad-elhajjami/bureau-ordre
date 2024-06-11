@@ -8,7 +8,7 @@
             <x-mary-button id="next-page" icon="o-arrow-right" class="btn-sm btn-primary"/>
         </div>
 
-        <div class="controls"> 
+        <div class="controls">
             <x-mary-button id="zoom-in" icon="o-magnifying-glass-plus" class="btn-secondary btn-sm"/>
             <x-mary-button id="zoom-out" icon="o-magnifying-glass-minus" class="btn-secondary btn-sm"/>
             <x-mary-button label="Imprimer" icon="o-printer" class="btn-sm btn-primary" onclick="printPdf()" />
@@ -16,10 +16,10 @@
 
     </div>
     <div class="grid grid-cols-5 gap-8">
-        
+
         <div class="col-span-2 bg-white p-8 rounded-lg border border-gray-200 h-fit sticky top-20">
             <x-mary-tabs wire:model="selectedTab">
-                <x-mary-tab name="details" label="Détails">   
+                <x-mary-tab name="details" label="Détails">
                     @if ($document)
                         @foreach ($columns as $column => $label)
                             <x-mary-list-item :item="$document" separator hover>
@@ -72,7 +72,7 @@
                         wire:model="content"
                         placeholder="Contenu de document"
                         rows="15"
-                        inline 
+                        inline
                     />
                 </x-mary-tab>
                 <x-mary-tab name="notes" label="Notes">
@@ -82,14 +82,14 @@
                             wire:model.defer="note"
                             hint="Max 1000 chars"
                             rows="5"
-                            inline 
+                            inline
                         />
-                        
+
                         <x-slot:actions>
                             <x-mary-button label="Ajouter une note" class="btn-primary" type="submit" spinner="addNote" />
                         </x-slot:actions>
                     </x-mary-form>
-        
+
                     <!-- Notes container -->
                     @if ($notes->count() > 0)
                     <ul class="mt-4 overflow-y-scroll h-[300px]" id="notes-container">
@@ -182,7 +182,7 @@
                     </x-mary-card>
                 </x-mary-tab>
             </x-mary-tabs>
-        </div>  
+        </div>
 
             <embed id="pdf-embed" src="{{ $this->getDocumentUrl() }}" type="application/pdf" class="h-screen col-span-3 w-full hidden" />
             <div id="pdf-viewer-container" class="h-fit flex items-center justify-center overflow-auto col-span-3 "></div>
@@ -211,7 +211,7 @@
                         const zoomOutBtn = document.getElementById('zoom-out');
                         const pageInput = document.getElementById('page-input');
                         const pageCountSpan = document.getElementById('page-count');
-                
+
                         let currentPage = 1;
                         let scale = 1;
                         let pdfDocument = null;
@@ -230,28 +230,28 @@
                                     renderPage(currentPage);
                                 }
                             });
-                
+
                             nextPageBtn.addEventListener('click', () => {
                                 if (currentPage < pdf.numPages) {
                                     currentPage++;
                                     renderPage(currentPage);
                                 }
                             });
-                
+
                             zoomInBtn.addEventListener('click', () => {
                                 if(scale < maxScale){
                                     scale += 0.1;
                                     renderPage(currentPage);
                                 }
                             });
-                
+
                             zoomOutBtn.addEventListener('click', () => {
                                 if (scale > minScale) {
                                     scale -= 0.1;
                                     renderPage(currentPage);
                                 }
                             });
-                
+
                             pageInput.addEventListener('change', () => {
                                 let pageNumber = parseInt(pageInput.value);
                                 if (pageNumber >= 1 && pageNumber <= pdf.numPages) {
@@ -264,30 +264,30 @@
                         }, function (reason) {
                             console.error(reason);
                         });
-                
+
                         function renderPage(pageNum) {
                             pdfDocument.getPage(pageNum).then(page => {
                                 const viewport = page.getViewport({ scale });
-                
+
                                 // Prepare canvas using PDF page dimensions
                                 const canvas = document.createElement('canvas');
                                 const context = canvas.getContext('2d');
                                 canvas.height = viewport.height;
                                 canvas.width = viewport.width;
-                
+
                                 // Clear previous canvas content
                                 container.innerHTML = '';
-                
+
                                 // Append canvas to the container
                                 container.appendChild(canvas);
-                
+
                                 // Render PDF page into canvas context
                                 const renderContext = {
                                     canvasContext: context,
                                     viewport: viewport
                                 };
                                 page.render(renderContext);
-                
+
                                 // Update the input field value
                                 pageInput.value = pageNum;
                             });
@@ -295,7 +295,7 @@
                     }
 
                     document.addEventListener('DOMContentLoaded', initializePdfViewer);
-                    
+
                 </script>
                  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js" onerror="handlePdfJsError()"></script>
                 @script
@@ -305,6 +305,6 @@
                     });
                 </script>
                 @endscript
-    </div>    
-</div>    
+    </div>
+</div>
     

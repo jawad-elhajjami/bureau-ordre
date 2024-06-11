@@ -64,14 +64,14 @@ class IncomingDocuments extends Component
         $documentsQuery->where(function ($query) use ($user) {
             // Include documents specifically sent to the user
             $query->where('recipient_id', $user->id);
-            
+
             // Include documents sent to the user's service if recipient_id is null
             $query->orWhere(function ($query) use ($user) {
                 $query->whereNull('recipient_id')
                       ->where('service_id', $user->service_id);
             });
         });
-        
+
 
         if (!empty($this->search)) {
             $documentsQuery->where(function ($query) {
@@ -85,8 +85,8 @@ class IncomingDocuments extends Component
             ->orderBy($this->sortBy['column'], $this->sortBy['direction'])
             ->paginate(4);
 
-        
-        
+
+
         $this->incomingDocumentsCount = $documents->count();
         $this->dispatch('count-changed', count: $this->incomingDocumentsCount);
 

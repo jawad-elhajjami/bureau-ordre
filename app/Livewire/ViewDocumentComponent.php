@@ -23,15 +23,15 @@ class ViewDocumentComponent extends Component
 
     // Add the $persist property to maintain Livewire state across navigation actions
     protected $persist = true;
-    
+
     public $selectedTab = 'details';
     public $metadata = [];
     public $otherDocuments = [];
     public $content = '';
-    
-    #[Validate('required|min:3|max:1000|string')] 
+
+    #[Validate('required|min:3|max:1000|string')]
     public $note;
-    
+
 
     public $columns = [
         'order_number' => 'N ordre',
@@ -137,6 +137,6 @@ class ViewDocumentComponent extends Component
             'notes_count' =>  note::where('document_id', $this->document->id)->count()
         ]);
     }
-    
+
 
 }

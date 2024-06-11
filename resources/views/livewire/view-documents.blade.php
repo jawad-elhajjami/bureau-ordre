@@ -7,16 +7,16 @@
         <x-slot:actions>
             <x-mary-button icon="o-plus" class="btn-primary" link="{{ route('create-document') }}" wire:navigate />
         </x-slot:actions>
-    </x-mary-header>  
+    </x-mary-header>
     <div class="bg-white dark:bg-gray-800 overflow-hidden sm:rounded-lg p-4">
         <x-mary-tabs wire:model="selectedTab" class="mb-4">
             <x-mary-loading class="text-primary" wire:loading wire:target="search" class="m-8"/>
             <x-mary-tab name="incoming" icon="o-document-arrow-down">
-                <x-slot:label>  
+                <x-slot:label>
                     Arrivée
 
                         <x-mary-badge :value="$incomingDocumentCount" class="badge-error incomingDocumentsCount"/>
-                    
+
                 </x-slot:label>
                 @livewire('incoming-documents', ['search' => $search])
             </x-mary-tab>

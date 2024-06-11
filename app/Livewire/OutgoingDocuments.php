@@ -15,7 +15,8 @@ class OutgoingDocuments extends Component
 
     public $search = '';
     public array $sortBy = ['column' => 'order_number', 'direction' => 'asc'];
-    
+
+
     #[On('search-changed')]
     public function searchChanged($value)
     {
@@ -37,7 +38,7 @@ class OutgoingDocuments extends Component
     public function deleteDocument($id)
     {
         $document = Document::findOrFail($id);
-        
+
         // Check if the user has permission to delete the document
         if (!auth()->user()->can('delete-document', $document)) {
             // Unauthorized, display error message
@@ -47,7 +48,7 @@ class OutgoingDocuments extends Component
 
         // Delete the document
         $document->delete();
-        
+
         // Display success message
         $this->success("Document ({$document->subject}) deleted successfully.");
     }
@@ -66,7 +67,7 @@ class OutgoingDocuments extends Component
         // Start building the query
         $documentsQuery = Document::query();
         $user = auth()->user();
-        
+
         // Filter for outgoing documents
         $documentsQuery->where('user_id', $user->id);
 

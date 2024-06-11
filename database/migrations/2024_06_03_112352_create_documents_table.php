@@ -18,8 +18,7 @@ return new class extends Migration
             $table->string('subject', 255);
             $table->string('file_path', 255);
             $table->text('description')->nullable();
-            $table->enum('importance_level', ['low', 'medium', 'high'])->nullable();
-            $table->integer('opt_code')->nullable();
+            $table->integer('otp_code')->nullable();
             $table->foreignId('service_id')->constrained('services');
             $table->foreignId('user_id')->constrained('users');
             $table->foreignId('category_id')->constrained('document_categories');
