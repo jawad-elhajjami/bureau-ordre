@@ -14,7 +14,6 @@ class OutgoingDocuments extends Component
     use Toast;
 
     public $search = '';
-    public $search = '';
     public array $sortBy = ['column' => 'order_number', 'direction' => 'asc'];
 
 

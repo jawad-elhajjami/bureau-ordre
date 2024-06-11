@@ -13,7 +13,9 @@ use Livewire\Component;
 use Livewire\Features\SupportFileUploads\TemporaryUploadedFile as SupportFileUploadsTemporaryUploadedFile;
 use Livewire\WithFileUploads;
 use Mary\Traits\Toast;
-use Livewire\TemporaryUploadedFile; 
+use Livewire\TemporaryUploadedFile;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\OtpCodeMail;
 
 class UpdateDocument extends Component
 {
@@ -31,19 +33,20 @@ class UpdateDocument extends Component
     public $recipient;
     public $loggedInUserId;
     public $users = [];
+    public $otpcode;
 
     public function mount($id)
     {
-
-        $this->loggedInUserId =  auth()->user()->id;
+        $this->loggedInUserId = auth()->user()->id;
 
         // Retrieve the document
         $this->document = Document::findOrFail($id);
-        
+
         // Authorize the user to view the document
         if (Gate::denies('update-document', $this->document)) {
             abort(403, "You are not authorized to update this document.");
         }
+
         $this->n_ordre = $this->document->order_number;
         $this->sujet = $this->document->subject;
         $this->description = $this->document->description;
@@ -51,18 +54,18 @@ class UpdateDocument extends Component
         $this->category = $this->document->category_id;
         $this->recipient = $this->document->recipient_id;
         $this->service = $this->document->service_id;
-        
-        $this->users = User::where('service_id', $this->service)
-        ->where('id', '!=', $this->loggedInUserId) // Exclude the logged-in user
-        ->get();
+        $this->otpcode = !empty($this->document->otp_code); // Set checkbox state based on the presence of OTP code
 
+        $this->users = User::where('service_id', $this->service)
+            ->where('id', '!=', $this->loggedInUserId) // Exclude the logged-in user
+            ->get();
     }
 
     public function updatedService($value)
     {
         $this->users = User::where('service_id', $this->service)
-        ->where('id', '!=', $this->loggedInUserId) // Exclude the logged-in user
-        ->get();
+            ->where('id', '!=', $this->loggedInUserId) // Exclude the logged-in user
+            ->get();
         $this->recipient = null; // Reset recipient when service changes
     }
 
@@ -83,7 +86,7 @@ class UpdateDocument extends Component
     {
         // Validate form
         $this->validate();
-        if(empty($this->recipient)){
+        if (empty($this->recipient)) {
             $this->recipient = null;
         }
         try {
@@ -98,6 +101,17 @@ class UpdateDocument extends Component
                 $filePath = $this->document->file_path;
             }
 
+            // Handle OTP code logic
+            if ($this->otpcode) {
+                // Generate OTP code if checkbox is checked
+                $otpCode = $this->generateOtpCode();
+                // Send OTP code to the recipient
+                $this->sendOtpCode($otpCode);
+            } else {
+                // Remove OTP code if checkbox is unchecked
+                $otpCode = null;
+            }
+
             // Update the document
             $this->document->update([
                 'order_number' => $this->n_ordre,
@@ -107,12 +121,37 @@ class UpdateDocument extends Component
                 'category_id' => $this->category,
                 'service_id' => $this->service,
                 'recipient_id' => $this->recipient,
-                'user_id' => auth()->user()->id
+                'user_id' => auth()->user()->id,
+                'otp_code' => $otpCode,
+                'requires_otp' => $this->otpcode
             ]);
 
             $this->success('Document mis à jour avec succès !');
         } catch (Exception $e) {
             $this->error($e->getMessage());
+        }
+    }
+
+    public function generateOtpCode()
+    {
+        return rand(100000, 999999);
+    }
+
+    public function sendOtpCode($otpCode)
+    {
+        if ($this->recipient) {
+            // Send OTP to the selected recipient
+            $recipient = User::find($this->recipient);
+            Mail::to($recipient->email)->send(new OtpCodeMail($otpCode, $recipient));
+        } else {
+            // Send OTP to all users of the selected service if recipient is not selected
+            $serviceUsers = User::where('service_id', $this->service)
+                ->where('id', '!=', $this->loggedInUserId)
+                ->get();
+
+            foreach ($serviceUsers as $user) {
+                Mail::to($user->email)->send(new OtpCodeMail($otpCode, $user));
+            }
         }
     }
 

@@ -58,6 +58,10 @@
                 />
             </div>
 
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <x-mary-checkbox label="Sécurisez ce fichier par code OTP" wire:model='otpcode' />
+            </div>
+
             <x-slot:actions>
                 <x-mary-button label="Créer" class="btn-primary" type="submit" spinner="save" :disabled="$file ? null : 'disabled'" />
             </x-slot:actions>

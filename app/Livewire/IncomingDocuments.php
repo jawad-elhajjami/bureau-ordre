@@ -37,7 +37,6 @@ class IncomingDocuments extends Component
     {
         $document = Document::findOrFail($id);
 
-
         if (!auth()->user()->can('delete-document', $document)) {
             $this->error("You are not authorized to delete this document.");
             return;
@@ -55,15 +54,24 @@ class IncomingDocuments extends Component
             ['key' => 'order_number', 'label' => 'N ordre', 'sortable' => true],
             ['key' => 'subject', 'label' => 'Sujet', 'sortable' => true],
             ['key' => 'description', 'label' => 'Description', 'sortable' => true],
-            ['key' => 'sent_by', 'label' => 'Envoyé par', 'sortable' => true],
+            ['key' => 'sent_by', 'label' => 'Envoyé par', 'sortable' => false],
+            ['key' => 'created_at', 'label' => 'Envoyé le', 'sortable' => true]
         ];
 
-        // Start building the query
         $documentsQuery = Document::query();
         $user = auth()->user();
 
-        // Filter for incoming documents
-        $documentsQuery->where('service_id', $user->service_id)->orWhere('recipient_id', auth()->user()->id);
+        $documentsQuery->where(function ($query) use ($user) {
+            // Include documents specifically sent to the user
+            $query->where('recipient_id', $user->id);
+
+            // Include documents sent to the user's service if recipient_id is null
+            $query->orWhere(function ($query) use ($user) {
+                $query->whereNull('recipient_id')
+                      ->where('service_id', $user->service_id);
+            });
+        });
+
 
         if (!empty($this->search)) {
             $documentsQuery->where(function ($query) {
@@ -73,11 +81,11 @@ class IncomingDocuments extends Component
             });
         }
 
-
-        // Sorting
         $documents = $documentsQuery
             ->orderBy($this->sortBy['column'], $this->sortBy['direction'])
             ->paginate(4);
+
+
 
         $this->incomingDocumentsCount = $documents->count();
         $this->dispatch('count-changed', count: $this->incomingDocumentsCount);

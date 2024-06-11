@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\FilesController;
+use App\Http\Controllers\OtpVerificationController;
 use App\Livewire\CreateDocument;
 use App\Livewire\ManageServices;
 use App\Livewire\ManageCategories;
@@ -9,9 +10,7 @@ use App\Livewire\ManageUsers;
 use App\Livewire\UpdateDocument;
 use App\Livewire\ViewDocumentComponent;
 use App\Livewire\ViewDocuments;
-use Illuminate\Bus\UpdatedBatchJobCounts;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\DocumentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,7 +22,6 @@ use App\Http\Controllers\DocumentController;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
-
 
 Route::get('/', function () {
     return view('welcome');
@@ -43,7 +41,7 @@ Route::middleware([
     Route::get('/document/create', CreateDocument::class)->name('create-document');
     Route::get('/inbox', ViewDocuments::class)->name('view-documents');
     Route::get('/files/{path}', [FilesController::class, 'show'])->where('path', '.*')->name('files.show');
-    Route::get('/document/view/{id}', ViewDocumentComponent::class)->name('documents.view');
+    Route::get('/document/view/{id}', ViewDocumentComponent::class)->name('documents.view')->middleware('verify.otp');
     Route::get('/document/update/{id}', UpdateDocument::class)->name('documents.update');
     Route::get('locale/{locale}', function ($locale) {
         session(['locale' => $locale]);
@@ -51,6 +49,7 @@ Route::middleware([
     })->name('locale.switch');
     Route::get('/documents/view/all', ManageDocuments::class)->name('documents.all')->middleware('role:admin');
 
-
+    // Route for OTP verification page
+    Route::get('/document/otp-verify/{id}', [OtpVerificationController::class, 'show'])->name('otp.verify');
+    Route::post('/document/otp-verify/{id}', [OtpVerificationController::class, 'verify'])->name('otp.verify.post');
 });
-
