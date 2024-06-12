@@ -64,11 +64,12 @@ class CreateDocument extends Component
             $otpCode = null;
             if ($this->otpcode) {
                 $otpCode = $this->generateOtpCode();
+                $sujet = $this->sujet;
 
                 if ($this->recipient) {
                     // Send OTP to the selected recipient
                     $recipient = User::find($this->recipient);
-                    Mail::to($recipient->email)->send(new OtpCodeMail($otpCode, $recipient));
+                    Mail::to($recipient->email)->send(new OtpCodeMail($otpCode, $recipient, $sujet));
                 } else {
                     // Send OTP to all users of the selected service if recipient is not selected
                     $serviceUsers = User::where('service_id', $this->service)
@@ -76,7 +77,7 @@ class CreateDocument extends Component
                         ->get();
 
                     foreach ($serviceUsers as $user) {
-                        Mail::to($user->email)->send(new OtpCodeMail($otpCode, $user));
+                        Mail::to($user->email)->send(new OtpCodeMail($otpCode, $user, $sujet));
                     }
                 }
             }
