@@ -16,45 +16,42 @@ class OtpCodeMail extends Mailable
 
     public $otpCode;
     public $user;
+    public $mailSubject;
 
     /**
      * Create a new message instance.
      */
-    public function __construct($otpCode, User $user)
+    public function __construct($otpCode, User $user, $mailSubject)
     {
         $this->otpCode = $otpCode;
         $this->user = $user;
-    }
-
-    public function build()
-    {
-        return $this->view('emails.otp-code')
-                    ->subject('Votre code OTP')
-                    ->with([
-                        'otpCode' => $this->otpCode,
-                        'user' => $this->user
-                    ]);
+        $this->mailSubject = $mailSubject;
     }
 
     /**
      * Get the message envelope.
      */
-    // public function envelope(): Envelope
-    // {
-    //     return new Envelope(
-    //         subject: 'Otp Code Mail',
-    //     );
-    // }
+    public function envelope(): Envelope
+    {
+        return new Envelope(
+            subject: 'Code OTP',
+        );
+    }
 
     /**
      * Get the message content definition.
      */
-    // public function content(): Content
-    // {
-    //     return new Content(
-    //         view: 'view.name',
-    //     );
-    // }
+    public function content(): Content
+    {
+        return new Content(
+            markdown: 'emails.otp-code',
+            with: [
+                'otpCode' => $this->otpCode,
+                'user' => $this->user,
+                'subject' => $this->subject,
+            ],
+        );
+    }
 
     /**
      * Get the attachments for the message.
