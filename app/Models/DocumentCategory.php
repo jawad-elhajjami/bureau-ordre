@@ -10,4 +10,9 @@ class DocumentCategory extends Model
     use HasFactory;
 
     protected $fillable = ['category_name'];
+
+    public function documents()
+    {
+        return $this->hasMany(Document::class, 'category_id');
+    }
 }
