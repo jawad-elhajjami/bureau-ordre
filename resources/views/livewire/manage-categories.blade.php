@@ -19,7 +19,7 @@
 
         <div class="bg-white dark:bg-gray-800 overflow-hidden sm:rounded-lg p-4">
             @if(count($categories) > 0)
-                
+
                 <x-mary-table :headers="$headers" :rows="$categories" striped with-pagination>
                     @scope('cell_category_name', $category)
                         <p>{{ $category->category_name }}</p>

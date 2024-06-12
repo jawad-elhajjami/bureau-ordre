@@ -24,12 +24,14 @@ class ManageCategories extends Component
 
     public function render()
     {
-        $categories = DocumentCategory::where('category_name', 'LIKE', '%' . $this->search . '%')->paginate(10);
+        $categories = DocumentCategory::where('category_name', 'LIKE', '%' . $this->search . '%')
+                                    ->withCount('documents')
+                                    ->paginate(10);
 
         $headers = [
-            ['key' => 'id', 'label' => 'ID'],
+            ['key' => 'id', 'label' => '#'],
             ['key' => 'category_name', 'label' => 'Nom de la Catégorie'],
-            ['key' => '', 'label' => 'Nombre de documents'],
+            ['key' => 'documents_count', 'label' => 'Nombre de documents'],
             ['key' => '', 'label' => 'Actions'],
         ];
 
@@ -46,16 +48,13 @@ class ManageCategories extends Component
         if ($this->editMode) {
             DocumentCategory::find($this->category_id)->update(['category_name' => $this->category_name]);
             $this->success('Catégorie mise à jour avec succès.');
-            // session()->flash('message', 'Catégorie mise à jour avec succès.');
         } else {
             DocumentCategory::create(['category_name' => $this->category_name]);
             $this->success('Catégorie créée avec succès.');
-            // session()->flash('message', 'Catégorie créée avec succès.');
         }
 
         $this->resetFields();
         $this->categoryModal = false;
-
     }
 
     public function showModal()
@@ -77,7 +76,6 @@ class ManageCategories extends Component
     {
         DocumentCategory::findOrFail($id)->delete();
         $this->error("Category supprimé.");
-        // session()->flash('message', 'Catégorie supprimée avec succès.');
     }
 
     private function resetFields()
@@ -87,4 +85,5 @@ class ManageCategories extends Component
         $this->editMode = false;
     }
 }
+
 
