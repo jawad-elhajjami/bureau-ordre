@@ -1,20 +1,18 @@
-<div class="container mx-auto my-p-4">
-    <div class="my-card">
-        <div class="my-card-header">
-            <h2>Verification OTP</h2>
-        </div>
-        <div class="my-card-body">
+<x-app-layout>
+    <x-mary-card title="Vérification du code OTP" subtitle="Entrez votre code OTP" separator>
+        <div class="card">
             @if(session('error'))
-                <div class="my-alert my-alert-danger">{{ session('error') }}</div>
+                <div class="alert alert-danger">{{ session('error') }}</div>
             @endif
             <form method="POST" action="{{ route('otp.verify.post', ['id' => $documentId]) }}">
                 @csrf
-                <div class="my-mb-4">
-                    <label for="otp_code" class="my-form-label">OTP Code</label>
-                    <input type="text" name="otp_code" id="otp_code" class="my-form-control" required>
+                <div class="mb-4 rounded-md">
+                    <input type="text" name="otp_code" id="otp_code" class="rounded-md" required>
                 </div>
-                <button type="submit" class="my-btn my-btn-primary">Verifier OTP</button>
+                <button type="submit" class="btn btn-primary">Vérifier</button>
             </form>
         </div>
-    </div>
-</div>
+    </x-mary-card>
+</x-app-layout>
+
+{{--  --}}
