@@ -23,14 +23,14 @@
                 icon="o-users"
             />
             <x-mary-stat
-                title="Nombre du départements"
+                title="Nombre du services"
                 :value="$documentStats['services'] ?? 0"
                 icon="o-building-office-2"
             />
         </div>
 
         <div class="grid lg:grid-cols-5 gap-8 mt-8">
-            <x-mary-card class="col-span-5 lg:col-span-3" :title="$documentStats['documents'] ?? 0" subtitle="Documents échangés pendant cette année" shadow separator>
+            <x-mary-card class="col-span-5 lg:col-span-3" :title="$documentStats['documents'] ?? 0" subtitle="Documents échangés au cours des 12 derniers mois" shadow separator>
                 <canvas id="myChart"></canvas>
             </x-mary-card>
 

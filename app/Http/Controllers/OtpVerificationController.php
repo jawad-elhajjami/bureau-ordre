@@ -26,9 +26,9 @@ class OtpVerificationController extends Controller
             $otpVerifiedDocuments[] = $id;
             Session::put('otp_verified_documents', $otpVerifiedDocuments);
 
-            return redirect()->route('documents.view', ['id' => $id])->with('success', 'OTP verified successfully.');
+            return redirect()->route('documents.view', ['id' => $id])->with('success', 'OTP vérifié avec succès.');
         }
 
-        return redirect()->route('otp.verify', ['id' => $id])->with('error', 'Invalid OTP code.');
+        return redirect()->route('otp.verify', ['id' => $id])->with('error', 'Code OTP non valide.');
     }
 }
