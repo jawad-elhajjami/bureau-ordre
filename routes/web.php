@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DWTUploadController;
 use App\Http\Controllers\FilesController;
 use App\Http\Controllers\OtpVerificationController;
 use App\Livewire\CreateDocument;
@@ -7,6 +8,7 @@ use App\Livewire\ManageServices;
 use App\Livewire\ManageCategories;
 use App\Livewire\ManageDocuments;
 use App\Livewire\ManageUsers;
+use App\Livewire\ScanDocuments;
 use App\Livewire\UpdateDocument;
 use App\Livewire\ViewDocumentComponent;
 use App\Livewire\ViewDocuments;
@@ -52,4 +54,8 @@ Route::middleware([
     // Route for OTP verification page
     Route::get('/document/otp-verify/{id}', [OtpVerificationController::class, 'show'])->name('otp.verify');
     Route::post('/document/otp-verify/{id}', [OtpVerificationController::class, 'verify'])->name('otp.verify.post');
+
+    // Route::get('/dwt_upload', [DWTUploadController::class, 'page']);
+    Route::get('/document/scan', ScanDocuments::class)->name('documents.scan');
+    Route::post('/dwt_upload/upload', [DWTUploadController::class, 'upload'])->name('dwtupload.upload');
 });
