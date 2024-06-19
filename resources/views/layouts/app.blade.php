@@ -4,6 +4,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
+        <meta name="user-id" content="{{ auth()->user()->id }}">
 
         <title>{{ config('app.name', 'Bureau d\'ordre') }}</title>
 
@@ -17,6 +18,20 @@
 
         <!-- Styles -->
         @livewireStyles
+
+        <style>
+            .indicator-dot {
+                display: inline-block;
+            }
+            .unread {
+                font-weight: bold;
+                color: black;
+            }
+            .read {
+                font-weight: normal;
+                color: gray;
+            }
+        </style>
     </head>
     <body class="font-sans antialiased min-h-screen font-sans antialiased bg-base-200/50 dark:bg-base-200">
 
@@ -35,12 +50,12 @@
 
             {{-- Right side actions --}}
             <x-slot:actions>
-                
+
                 <x-mary-dropdown>
                     <x-slot:trigger>
                         <x-mary-button icon="o-language" label="Changez le langage" class="btn-ghost btn-sm" responsive />
                     </x-slot:trigger>
-                 
+
                     <x-mary-menu-item title="Arabe" link="{{ route('locale.switch', 'ar') }}" no-wire-navigate />
                     <x-mary-menu-item title="Français" link="{{ route('locale.switch', 'fr') }}" no-wire-navigate />
                 </x-mary-dropdown>
@@ -48,7 +63,7 @@
                     <x-slot:trigger>
                         <x-mary-button icon="o-computer-desktop" label="Changez le theme" class="btn-ghost btn-sm" responsive />
                     </x-slot:trigger>
-                 
+
                     <x-mary-menu-item title="Emerald" onclick="changeTheme('emerald')" />
                     <x-mary-menu-item title="Light" onclick="changeTheme('light')" />
                     <x-mary-menu-item title="Winter" onclick="changeTheme('winter')" />
@@ -57,14 +72,7 @@
 
                 </x-mary-dropdown>
 
-                <x-mary-dropdown>
-                    <x-slot:trigger>
-                        <x-mary-button icon="o-bell" class="btn-circle btn-outline" />
-                    </x-slot:trigger>
-                
-                    <x-mary-menu-item title="Notification 1" />
-                    <x-mary-menu-item title="Notification 2" />
-                </x-mary-dropdown>
+                @livewire('notification')
 
             </x-slot:actions>
         </x-mary-nav>
@@ -127,7 +135,7 @@
         @stack('modals')
 
         @livewireScripts
-        
+
         <script>
             // Function to change the theme and save it to localStorage
             function changeTheme(theme) {

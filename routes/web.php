@@ -13,6 +13,7 @@ use App\Livewire\UpdateDocument;
 use App\Livewire\ViewDocumentComponent;
 use App\Livewire\ViewDocuments;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\NotificationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -45,6 +46,10 @@ Route::middleware([
     Route::get('/files/{path}', [FilesController::class, 'show'])->where('path', '.*')->name('files.show');
     Route::get('/document/view/{id}', ViewDocumentComponent::class)->name('documents.view')->middleware('verify.otp');
     Route::get('/document/update/{id}', UpdateDocument::class)->name('documents.update');
+
+    Route::get('/notifications/unread', [NotificationController::class, 'getUnreadNotifications'])->middleware('auth');
+    Route::post('/notifications/mark-all-as-read', [NotificationController::class, 'markAllAsRead'])->middleware('auth');
+
     Route::get('locale/{locale}', function ($locale) {
         session(['locale' => $locale]);
         return redirect()->back();

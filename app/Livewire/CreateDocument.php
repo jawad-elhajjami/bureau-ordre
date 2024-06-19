@@ -12,6 +12,7 @@ use Livewire\WithFileUploads;
 use Mary\Traits\Toast;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\OtpCodeMail;
+use App\Notifications\DocumentCreated;
 
 class CreateDocument extends Component
 {
@@ -73,7 +74,7 @@ class CreateDocument extends Component
                 } else {
                     // Send OTP to all users of the selected service if recipient is not selected
                     $serviceUsers = User::where('service_id', $this->service)
-                        ->where('id', '!=', $this->loggedInUserId)
+                        ->where('id', '!=', $this->loggedInUserId) // Exclude the logged-in user
                         ->get();
 
                     foreach ($serviceUsers as $user) {
@@ -82,7 +83,7 @@ class CreateDocument extends Component
                 }
             }
 
-            Document::create([
+            $document = Document::create([
                 'order_number' => $this->n_ordre,
                 'subject' => $this->sujet,
                 'file_path' => $filePath,
@@ -94,6 +95,9 @@ class CreateDocument extends Component
                 'otp_code' => $otpCode // Save OTP code if generated
             ]);
 
+            // Notify the admin and recipient or service users
+            $this->notifyUsers($document);
+
             $this->success('Document créé avec succès !');
             $this->resetExcept('n_ordre');
 
@@ -101,6 +105,31 @@ class CreateDocument extends Component
             $this->error($e->getMessage());
         }
     }
+
+    private function notifyUsers($document)
+    {
+        $admin = User::where('role_id', 1)->first();
+        $recipient = $document->recipient;
+        $creator = auth()->user();
+
+        // Notify the admin
+        $admin->notify(new DocumentCreated($document, $creator));
+
+        if ($recipient) {
+            // Notify the recipient if specified
+            $recipient->notify(new DocumentCreated($document, $creator));
+        } else {
+            // Notify all users in the service except the creator
+            $serviceUsers = User::where('service_id', $document->service_id)
+                ->where('id', '!=', $creator->id)
+                ->get();
+
+            foreach ($serviceUsers as $user) {
+                $user->notify(new DocumentCreated($document, $creator));
+            }
+        }
+    }
+
 
     public function generateOtpCode()
     {
