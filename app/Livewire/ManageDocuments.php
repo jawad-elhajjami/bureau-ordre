@@ -46,6 +46,7 @@ class ManageDocuments extends Component
         $this->filterCategory = null;
         $this->filterService = null;
         $this->filterRecipient = null;
+        $this->timePeriodFilter = null;
         $this->success('Filtres réinitialisés');
     }
 

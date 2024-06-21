@@ -3,6 +3,8 @@
 use App\Http\Controllers\DWTUploadController;
 use App\Http\Controllers\FilesController;
 use App\Http\Controllers\OtpVerificationController;
+use App\Http\Livewire\SmtpSettings;
+use App\Livewire\Courriel;
 use App\Livewire\CreateDocument;
 use App\Livewire\ManageServices;
 use App\Livewire\ManageCategories;
@@ -55,7 +57,7 @@ Route::middleware([
     Route::get('/document/otp-verify/{id}', [OtpVerificationController::class, 'show'])->name('otp.verify');
     Route::post('/document/otp-verify/{id}', [OtpVerificationController::class, 'verify'])->name('otp.verify.post');
 
-    // Route::get('/dwt_upload', [DWTUploadController::class, 'page']);
     Route::get('/document/scan', ScanDocuments::class)->name('documents.scan');
     Route::post('/dwt_upload/upload', [DWTUploadController::class, 'upload'])->name('dwtupload.upload');
+    Route::get('/courriel', Courriel::class)->name('courriel');
 });
