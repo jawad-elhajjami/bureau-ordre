@@ -10,9 +10,9 @@
             />
         </div>
 
-        <x-mary-header title="Utilisateurs" subtitle="Gérez les utilisateurs">
+        <x-mary-header title="{{ __('messages.users_headers_title') }}" subtitle="{{ __('messages.manage_users_subtitle') }}">
             <x-slot:middle class="!justify-end">
-                <x-mary-input icon="o-bolt" wire:model.live="search" placeholder="Rechercher..." />
+                <x-mary-input icon="o-bolt" wire:model.live="search" placeholder="{{ __('messages.search_placeholder') }}" />
             </x-slot:middle>
             <x-slot:actions>
                 <x-mary-button icon="o-plus" class="btn-primary" spinner @click="$wire.showModal()" />
@@ -50,8 +50,11 @@
 
                     @scope('actions', $user) 
                     <div class="flex gap-1">
+                        @php
+                            $confirmDeletionOfUserMessage = __('messages.confirm_deletion_of_user_message');
+                        @endphp
                         @if($user->id !== auth()->user()->id && $user->non_deletable == 0)
-                            <x-mary-button icon="o-trash" wire:click="delete({{ $user->id }})" wire:confirm="Vous-êtes sûr de supprimer cet utilisateur ?" spinner class="btn-sm btn-ghost text-red-600"  />
+                            <x-mary-button icon="o-trash" wire:click="delete({{ $user->id }})" wire:confirm="{{ $confirmDeletionOfUserMessage }}" spinner class="btn-sm btn-ghost text-red-600"  />
                         @endif
                     </div>
                     @endscope
@@ -66,19 +69,19 @@
 
     <!-- Create user modal -->
 
-    <x-mary-modal wire:model="userModal" title="{{ $editMode ? 'Modifier cet utilisateur' : 'Ajouter un utilisateur' }}">
+    <x-mary-modal wire:model="userModal" title="{{ $editMode ? __('messages.edit_user_modal_title') : __('messages.add_user_modal_title') }}">
         <x-mary-form wire:submit="save">
             <div class="mb-4">
-                <x-mary-input label="Nom complet" icon="o-user"  wire:model="form.fullName" inline />
+                <x-mary-input label="{{ __('messages.full_name_field_label') }}" icon="o-user"  wire:model="form.fullName" inline />
             </div>
             <div class="mb-4">
-                <x-mary-input label="E-mail" type="email" icon="o-inbox"  wire:model="form.email" inline />
+                <x-mary-input label="{{ __('messages.email_field_label') }}" type="email" icon="o-inbox"  wire:model="form.email" inline />
             </div>
             <div class="mb-4">
-                <x-mary-input label="Mot de passe" type="password" icon="o-lock-closed"  wire:model="form.password" inline />
+                <x-mary-input label="{{ __('messages.password_field_label') }}" type="password" icon="o-lock-closed"  wire:model="form.password" inline />
             </div>
             <div class="mb-4">
-                <x-mary-input label="Confirmer le mot de passe" icon="o-lock-closed" type="password"  wire:model="form.confirm_password" inline />
+                <x-mary-input label="{{ __('messages.confirm_password_field_label') }}" icon="o-lock-closed" type="password"  wire:model="form.confirm_password" inline />
             </div>
             <div class="mb-4">
                 
@@ -88,8 +91,8 @@
                 @endphp
                 
                 <x-mary-select
-                    label="Choisir un role"
-                    placeholder="Choisir un role"
+                    label="{{ __('messages.choose_role_field_label') }}"
+                    placeholder="{{ __('messages.choose_role_field_label') }}"
                     :options="$roles"
                     wire:model="form.role_id"
                     inline
@@ -98,9 +101,9 @@
             </div>
             <div class="mb-4">
                 <x-mary-select
-                    label="Service"
+                    label="{{ __('messages.choose_service_field_label') }}"
                     :options="$services"
-                    placeholder="Choisir un service/département"
+                    placeholder="{{ __('messages.choose_service_field_label') }}"
                     placeholder-value="0"
                     wire:model="form.service_id"
                     inline
@@ -108,8 +111,8 @@
             </div>
         
             <x-slot:actions>
-                <x-mary-button label="Annuler" @click="$wire.userModal = false" />
-                <x-mary-button label="{{ $editMode ? 'Modifier' : 'Créer' }}" class="btn-primary" type="submit" spinner="save" />
+                <x-mary-button label="{{ __('messages.cancel_btn_text') }}" @click="$wire.userModal = false" />
+                <x-mary-button label="{!! $editMode ? __('messages.edit_btn_text') : __('messages.create_btn_text') !!}" class="btn-primary" type="submit" spinner="save" />
             </x-slot:actions>
         </x-mary-form>
     </x-mary-modal>

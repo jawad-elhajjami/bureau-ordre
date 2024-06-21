@@ -45,7 +45,7 @@ class AuthServiceProvider extends ServiceProvider
             }
 
             if ($user->role->name === 'admin') {
-                return true; // Admin can view all documents
+                return true;
             }
         });
 
