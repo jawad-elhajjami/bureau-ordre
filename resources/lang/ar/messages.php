@@ -73,5 +73,10 @@ return [
     'confirm_deletion_of_user_message' => 'هل انت متأكد من حذف هذا المستخدم',
     'courriel_header_title' => 'المراسلات الخارجية',
     'modify_smtp_info_btn' => 'تعديل معلومات SMTP',
+    'mark_as_read_btn' => 'تمت القراءة',
+    'mark_as_unread_btn' => 'حذف من لائحة الملفات المقروءة',
+    'mark_as_read_success' => 'تم الحفظ كملف مقروء',
+    'mark_as_unread_success' => 'تم حذف الملف من لائحة الملفات المقروءة',
+    'read_by_list' => 'تمت القراءة من قبل'
 ];
 

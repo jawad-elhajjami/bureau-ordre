@@ -1,7 +1,3 @@
-@if(session('error'))
-    <div class="alert alert-danger">{{ session('error') }}</div>
-@endif
-
 <div>
     @if($documents->count() > 0)
         <x-mary-table :headers="$headers" :rows="$documents" striped with-pagination :sort-by="$sortBy">
@@ -36,6 +32,15 @@
                         @can('delete-document', $document)
                             <x-mary-button icon="o-trash" spinner class="btn-sm btn-ghost" wire:click="deleteDocument({{ $document->id }})" wire:confirm="Vous êtes sûr de supprimer cet document ?"/>
                         @endcan
+                        
+                        @can('mark-as-read', $document)
+                            <!-- Mark document as read -->
+                            @php
+                                $isRead = $document->readers->contains(auth()->user());
+                            @endphp
+                            <x-mary-button icon="o-check" spinner tooltip="{{ $isRead ? __('messages.mark_as_unread_btn') : __('messages.mark_as_read_btn') }}"  wire:click="toggleReadStatus({{ $document->id }})" class="btn-sm btn-ghost {{ $isRead ? 'text-green-500' : 'text-gray-800' }}" />
+                        @endcan
+                        
                     </div>
                 @endscope
             @endforeach

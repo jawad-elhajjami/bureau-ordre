@@ -32,7 +32,7 @@ class ManageCategories extends Component
             ['key' => 'id', 'label' => '#'],
             ['key' => 'category_name', 'label' => 'Nom de la Catégorie'],
             ['key' => 'documents_count', 'label' => 'Nombre de documents'],
-            ['key' => '', 'label' => 'Actions'],
+            // ['key' => '', 'label' => 'Actions'],
         ];
 
         return view('livewire.manage-categories', [

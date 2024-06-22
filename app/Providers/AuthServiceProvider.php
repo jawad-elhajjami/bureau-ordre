@@ -108,5 +108,16 @@ class AuthServiceProvider extends ServiceProvider
             return false;
         });
 
+
+        // check if user can mark a document as read
+
+        Gate::define('mark-as-read', function ($user, Document $document) {
+            // Check if the user is not the owner of the document
+            if ($document->user_id !== $user->id) {
+                return true;
+            }
+            return false;
+        });
+
     }
 }

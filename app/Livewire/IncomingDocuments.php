@@ -21,6 +21,7 @@ class IncomingDocuments extends Component
     public function searchChanged($value)
     {
         $this->search = $value;
+
     }
 
     public function sortBy($column)
@@ -45,6 +46,20 @@ class IncomingDocuments extends Component
         $document->delete();
         $this->success("Document ({$document->subject}) supprimé.");
         $this->dispatch('incomingDocumentDeleted');
+    }
+
+    public function toggleReadStatus($documentId)
+    {
+        $user = auth()->user();
+        $document = Document::find($documentId);
+
+        if ($document->readers->contains($user)) {
+            $document->readers()->detach($user);
+            $this->success(__('messages.mark_as_unread_success'));
+        } else {
+            $document->readers()->attach($user, ['read_at' => now()]);
+            $this->success(__('messages.mark_as_read_success'));
+        }
     }
 
     public function render()
@@ -84,8 +99,6 @@ class IncomingDocuments extends Component
         $documents = $documentsQuery
             ->orderBy($this->sortBy['column'], $this->sortBy['direction'])
             ->paginate(4);
-
-
 
         $this->incomingDocumentsCount = $documents->count();
         $this->dispatch('count-changed', count: $this->incomingDocumentsCount);
