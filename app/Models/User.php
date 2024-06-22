@@ -70,9 +70,12 @@ class User extends Authenticatable
         return $this->belongsTo(Service::class);
     }
 
-    public function getIsAdminAttribute()
-    {
+    public function getIsAdminAttribute(){
         return $this->role_id ===  1;
+    }
+
+    public function readDocuments(){
+        return $this->belongsToMany(Document::class)->withPivot('read_at')->withTimestamps();
     }
 
 

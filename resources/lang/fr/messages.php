@@ -73,5 +73,10 @@ return [
     'confirm_deletion_of_user_message' => 'êtes-vous sûr de vouloir supprimer cet utilisateur?',
     'courriel_header_title' => 'Courriel externe',
     'modify_smtp_info_btn' => 'Modifier les informations SMTP',
+    'mark_as_read_btn' => 'Marquer comme lu',
+    'mark_as_unread_btn' => 'Marquer comme non lu',
+    'mark_as_read_success' => 'Le document a été marqué comme lu',
+    'mark_as_unread_success' => 'Le document a été marqué comme non lu',
+    'read_by_list' => 'Lu par',
 ];
 

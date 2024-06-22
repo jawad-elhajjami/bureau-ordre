@@ -1,5 +1,5 @@
 <div class="container">
-    <div class="flex items-center w-full justify-between mb-4 p-4">
+    <div class="flex items-center w-full justify-between mb-4 p-4 bg-white rounded-lg border border-gray-200">
         <h1 class="text-2xl font-bold">{{ $document->subject }}</h1>
         <div class="controls flex gap-4 items-center">
             <x-mary-button id="prev-page" icon="o-arrow-left"  class="btn-sm btn-primary"/>
@@ -15,11 +15,15 @@
         </div>
 
     </div>
+
+
+    
     <div class="grid grid-cols-5 gap-8">
 
         <div class="col-span-2 bg-white p-8 rounded-lg border border-gray-200 h-fit sticky top-20">
             <x-mary-tabs wire:model="selectedTab">
                 <x-mary-tab name="details" label="Détails">
+                    
                     @if ($document)
                         @foreach ($columns as $column => $label)
                             <x-mary-list-item :item="$document" separator hover>
@@ -40,6 +44,32 @@
                             </x-mary-list-item>
                         @endforeach
                     @endif
+                    
+                    <!-- Show document readers list -->
+                    @if(count($document->readers) > 0)
+                    <x-mary-list-item :item="$document" no-separator no-hover>
+                        <x-slot:value>
+                            {{ __('messages.read_by_list') }}
+                        </x-slot:value>
+                        <x-slot:sub-value>
+                            <div class="flex -space-x-3 mb-4">
+                                @if(count($document->readers) > 0)
+                                    @foreach ($document->readers as $reader)
+                                    <x-mary-popover>
+                                        <x-slot:trigger>
+                                            <div class="w-10 h-10 rounded-full text-white flex items-center justify-center text-sm font-bold" style="background-color: {{ $reader->color }}">{{ $reader->initials }}</div>
+                                        </x-slot:trigger>
+                                        <x-slot:content>
+                                            <b> {{ $reader->name }} </b> <br>
+                                        </x-slot:content>
+                                    </x-mary-popover>
+                                    @endforeach
+                                @endif
+                            </div> 
+                        </x-slot:sub-value>
+                    </x-mary-list-item>
+                    @endif
+
                 </x-mary-tab>
 
                 <x-mary-tab name="metadata" label="Métadonnés">
@@ -182,10 +212,11 @@
                     </x-mary-card>
                 </x-mary-tab>
             </x-mary-tabs>
+
         </div>
 
             <embed id="pdf-embed" src="{{ $this->getDocumentUrl() }}" type="application/pdf" class="h-screen col-span-3 w-full hidden" />
-            <div id="pdf-viewer-container" class="h-fit flex items-center justify-center overflow-auto col-span-3 "></div>
+            <div id="pdf-viewer-container" class="h-screen flex items-center justify-center overflow-auto col-span-3 bg-white border border-gray-200 rounded-lg"></div>
 
                 <script>
                     function handlePdfJsError() {

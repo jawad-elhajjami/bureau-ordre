@@ -12,6 +12,11 @@
     <div class="bg-white dark:bg-gray-800 overflow-hidden sm:rounded-lg p-4">
     @if(count($documents) > 0)
     <x-mary-table :headers="$headers" :rows="$documents" striped with-pagination :sort-by="$sortBy">
+        
+        @scope('cell_description', $document)
+            <p class="truncate text-ellipsis w-96">{{ $document->description }}</p>
+        @endscope
+        
         @scope('cell_sent_by', $document)
             @if($document->owner)
                 @if(auth()->user()->id == $document->owner->id)
@@ -35,7 +40,7 @@
         
         @scope('cell_department_sent_to', $document)
             @if($document->service != null)
-                <x-mary-badge value="{{ $document->service->name }}" class="badge-warning" />
+                <x-mary-badge value="{{ $document->service->name }}" class="badge-warning truncate" />
             @else
                 <p>Service supprimé</p>
             @endif
@@ -73,6 +78,15 @@
                 @can('delete-document', $document)
                     <x-mary-button icon="o-trash" spinner class="btn-sm btn-ghost" spinner wire:click="deleteDocument({{ $document->id }})" wire:confirm="Vous êtes sûr de supprimer cet document ?"/>
                 @endcan
+                
+                @can('mark-as-read', $document)
+                <!-- Mark document as read -->
+                @php
+                    $isRead = $document->readers->contains(auth()->user());
+                @endphp
+                <x-mary-button icon="o-check" spinner tooltip="{{ $isRead ? __('messages.mark_as_unread_btn') : __('messages.mark_as_read_btn') }}"  wire:click="toggleReadStatus({{ $document->id }})" class="btn-sm btn-ghost {{ $isRead ? 'text-green-500' : 'text-gray-800' }}" />
+                @endcan
+
             </div>
         @endscope
     </x-mary-table>

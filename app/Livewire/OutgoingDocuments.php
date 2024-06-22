@@ -24,6 +24,7 @@ class OutgoingDocuments extends Component
         $this->search = $value;
         // Perform any other actions based on the search value
         // For example, you can call other methods or update other properties
+        
     }
 
     public function sortBy($column)

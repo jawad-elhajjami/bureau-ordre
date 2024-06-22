@@ -1,6 +1,9 @@
 <div>
     @if(count($documents) > 0)
     <x-mary-table :headers="$headers" :rows="$documents" striped with-pagination :sort-by="$sortBy">
+        @scope('cell_description', $document)
+            <p class="truncate text-ellipsis w-96">{{ $document->description }}</p>
+        @endscope
         @scope('cell_sent_by', $document)
             @if($document->owner)
                 @if(auth()->user()->id == $document->owner->id)
