@@ -17,6 +17,16 @@
 
         <!-- Styles -->
         @livewireStyles
+
+        <style>
+            .custom-scrollbar::-webkit-scrollbar {
+                display: none;
+            }
+            .custom-scrollbar {
+                -ms-overflow-style: none; /* IE and Edge */
+                scrollbar-width: none; /* Firefox */
+            }
+        </style>
     </head>
     <body class="font-sans antialiased min-h-screen font-sans antialiased bg-base-200/50 dark:bg-base-200" dir="{{ App::isLocale('ar') ? 'rtl' : 'ltr' }}">
 
@@ -35,7 +45,7 @@
 
             {{-- Right side actions --}}
             <x-slot:actions>
-                
+
                 <x-mary-dropdown>
                     <x-slot:trigger>
                         <x-mary-button icon="o-language" label="{{ __('messages.change_language_str') }}" class="btn-ghost btn-sm" responsive />
@@ -43,12 +53,13 @@
                  
                     <x-mary-menu-item title="{{ __('messages.language_title_arabe') }}" link="{{ route('locale.switch', 'ar') }}" no-wire-navigate />
                     <x-mary-menu-item title="{{ __('messages.language_title_french') }}" link="{{ route('locale.switch', 'fr') }}" no-wire-navigate />
+
                 </x-mary-dropdown>
                 <x-mary-dropdown>
                     <x-slot:trigger>
                         <x-mary-button icon="o-computer-desktop" label="{{ __('messages.switch_theme_str') }}" class="btn-ghost btn-sm" responsive />
                     </x-slot:trigger>
-                 
+
                     <x-mary-menu-item title="Emerald" onclick="changeTheme('emerald')" />
                     <x-mary-menu-item title="Light" onclick="changeTheme('light')" />
                     <x-mary-menu-item title="Winter" onclick="changeTheme('winter')" />
@@ -57,14 +68,7 @@
 
                 </x-mary-dropdown>
 
-                <x-mary-dropdown>
-                    <x-slot:trigger>
-                        <x-mary-button icon="o-bell" class="btn-circle btn-outline" />
-                    </x-slot:trigger>
-                
-                    <x-mary-menu-item title="Notification 1" />
-                    <x-mary-menu-item title="Notification 2" />
-                </x-mary-dropdown>
+                @livewire('notifications')
 
             </x-slot:actions>
         </x-mary-nav>
@@ -128,8 +132,29 @@
         @stack('modals')
 
         @livewireScripts
-        
+
         <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const dropdownTrigger = document.querySelector('.notification-indicator');
+                const notificationList = document.getElementById('notification-list');
+
+                if (window.Echo) {
+                    window.Echo.channel('notifications')
+                    .listen('NotificationEvent', (e) => {
+                        console.log('Notification received:', e);
+                        Livewire.dispatch('notificationReceived', e);
+                    });
+                } else {
+                    console.error('Echo is not defined');
+                }
+
+                if (dropdownTrigger && notificationList) {
+                    dropdownTrigger.addEventListener('click', function () {
+                        Livewire.dispatch('markAsRead');
+                    });
+                }
+            });
+
             // Function to change the theme and save it to localStorage
             function changeTheme(theme) {
                 document.documentElement.setAttribute('data-theme', theme);
