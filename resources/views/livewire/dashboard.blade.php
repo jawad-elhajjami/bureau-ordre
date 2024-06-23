@@ -4,40 +4,40 @@
             <x-mary-loading class="text-primary loading-lg absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 h-screen" wire:loading />
         </div>
 
-        <x-mary-header title="Tableau de bord" subtitle="Analyses et statistiques"/>
+        <x-mary-header title="{{ __('messages.dashboard_title_str') }}" subtitle="{{ __('messages.dashboard_subtitle_str') }}"/>
 
         <div class="grid lg:grid-cols-4 gap-5 lg:gap-8 mb-10 md:grid-cols-3">
             <x-mary-stat
-                title="Documents échangés"
+                title="{{ __('messages.exchanged_documents_stat_title') }}"
                 :value="$documentStats['documents'] ?? 0"
                 icon="o-paper-clip"
             />
             <x-mary-stat
-                title="Catégories des documents"
+                title="{{ __('messages.documents_categories_stat_title') }}"
                 :value="$documentStats['categories'] ?? 0"
                 icon="o-folder"
             />
             <x-mary-stat
-                title="Nombre du personnel"
+                title="{{ __('messages.users_stat_title') }}"
                 :value="$documentStats['users'] ?? 0"
                 icon="o-users"
             />
             <x-mary-stat
-                title="Nombre du services"
+                title="{{ __('messages.services_stat_title') }}"
                 :value="$documentStats['services'] ?? 0"
                 icon="o-building-office-2"
             />
         </div>
 
         <div class="grid lg:grid-cols-5 gap-8 mt-8">
-            <x-mary-card class="col-span-5 lg:col-span-3" :title="$documentStats['documents'] ?? 0" subtitle="Documents échangés au cours des 12 derniers mois" shadow separator>
+            <x-mary-card class="col-span-5 lg:col-span-3" :title="$documentStats['documents'] ?? 0" subtitle="{{ __('messages.number_of_documents_in_last_twelve_months') }}" shadow separator>
                 <canvas id="myChart"></canvas>
             </x-mary-card>
 
             <x-mary-card class="col-span-5 lg:col-span-2" shadow separator>
                 <div class="flex items-center justify-between pb-5">
-                    <h1 class="text-base font-medium w-full">Nombre de documents par catégorie</h1>
-                    <x-mary-button class="btn-primary" label="Voir plus" link="{{ route('manage-categories') }}" wire:navigate/>
+                    <h1 class="text-base font-medium w-full">{{ __('messages.documents_categories_stat_title') }}</h1>
+                    <x-mary-button class="btn-primary" label="{{ __('messages.see_more_btn_text') }}" link="{{ route('manage-categories') }}" wire:navigate/>
                 </div>
                 <ul>
                     @foreach($documentsByCategory as $category)

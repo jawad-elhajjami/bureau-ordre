@@ -28,7 +28,7 @@
             }
         </style>
     </head>
-    <body class="font-sans antialiased min-h-screen font-sans antialiased bg-base-200/50 dark:bg-base-200">
+    <body class="font-sans antialiased min-h-screen font-sans antialiased bg-base-200/50 dark:bg-base-200" dir="{{ App::isLocale('ar') ? 'rtl' : 'ltr' }}">
 
         {{-- The navbar with `sticky` and `full-width` --}}
         <x-mary-nav sticky full-width>
@@ -48,15 +48,16 @@
 
                 <x-mary-dropdown>
                     <x-slot:trigger>
-                        <x-mary-button icon="o-language" label="Changez le langage" class="btn-ghost btn-sm" responsive />
+                        <x-mary-button icon="o-language" label="{{ __('messages.change_language_str') }}" class="btn-ghost btn-sm" responsive />
                     </x-slot:trigger>
+                 
+                    <x-mary-menu-item title="{{ __('messages.language_title_arabe') }}" link="{{ route('locale.switch', 'ar') }}" no-wire-navigate />
+                    <x-mary-menu-item title="{{ __('messages.language_title_french') }}" link="{{ route('locale.switch', 'fr') }}" no-wire-navigate />
 
-                    <x-mary-menu-item title="Arabe" link="{{ route('locale.switch', 'ar') }}" no-wire-navigate />
-                    <x-mary-menu-item title="Français" link="{{ route('locale.switch', 'fr') }}" no-wire-navigate />
                 </x-mary-dropdown>
                 <x-mary-dropdown>
                     <x-slot:trigger>
-                        <x-mary-button icon="o-computer-desktop" label="Changez le theme" class="btn-ghost btn-sm" responsive />
+                        <x-mary-button icon="o-computer-desktop" label="{{ __('messages.switch_theme_str') }}" class="btn-ghost btn-sm" responsive />
                     </x-slot:trigger>
 
                     <x-mary-menu-item title="Emerald" onclick="changeTheme('emerald')" />
@@ -103,7 +104,7 @@
                     <x-mary-menu-sub title="{{ __('messages.menu_manage_documents_title') }}" icon="o-document">
                         <x-mary-menu-item title="{{ __('messages.menu_share_document_title') }}" link="{{ route('create-document') }}" icon="o-paper-airplane" />
                         <x-mary-menu-item title="{{ __('messages.menu_list_documents_title') }}" link="{{ route('view-documents') }}" icon="o-inbox" />
-                        <x-mary-menu-item title="Numériser un document" link="{{ route('documents.scan') }}" icon="o-printer" no-wire-navigate/>
+                        <x-mary-menu-item title="{{ __('messages.menu_scan_documents_title') }}" link="{{ route('documents.scan') }}" icon="o-printer" no-wire-navigate/>
                         @if(Auth::user() && Auth::user()->role->name == 'admin')
                             <x-mary-menu-item title="{{ __('messages.menu_all_documents_title') }}" link="{{ route('documents.all') }}" icon="o-list-bullet" />
                         @endif
@@ -113,6 +114,7 @@
                         <x-mary-menu-item title="{{  __('messages.menu_manage_services_title') }}" icon="o-building-office" link="{{ route('manage-services') }}" wire:navigate/>
                         <x-mary-menu-item title="{{ __('messages.menu_manage_categories_title') }}" icon="o-folder" link="{{ route('manage-categories') }}" wire:navigate />
                     @endif
+                    <x-mary-menu-item title="{{ __('messages.courriel_header_title') }}" icon="o-at-symbol" link="{{ route('courriel') }}" />
                     <x-mary-menu-item title="{{ __('messages.menu_settings_title') }}" icon="o-cog-6-tooth" link="{{ route('profile.show') }}" />
                 </x-mary-menu>
             </x-slot:sidebar>

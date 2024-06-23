@@ -45,7 +45,7 @@ class AuthServiceProvider extends ServiceProvider
             }
 
             if ($user->role->name === 'admin') {
-                return true; // Admin can view all documents
+                return true;
             }
         });
 
@@ -105,6 +105,17 @@ class AuthServiceProvider extends ServiceProvider
                 return true; // Admin can delete all documents
             }
 
+            return false;
+        });
+
+
+        // check if user can mark a document as read
+
+        Gate::define('mark-as-read', function ($user, Document $document) {
+            // Check if the user is not the owner of the document
+            if ($document->user_id !== $user->id) {
+                return true;
+            }
             return false;
         });
 

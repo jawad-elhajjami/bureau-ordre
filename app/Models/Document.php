@@ -36,6 +36,11 @@ class Document extends Model
         return $this->belongsTo(DocumentCategory::class, 'category_id');
     }
 
+    public function readers()
+    {
+        return $this->belongsToMany(User::class)->withPivot('read_at')->withTimestamps();
+    }
+
     public function recipient()  // Add this method
     {
         return $this->belongsTo(User::class, 'recipient_id');

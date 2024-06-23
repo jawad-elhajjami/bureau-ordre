@@ -46,6 +46,7 @@ class ManageDocuments extends Component
         $this->filterCategory = null;
         $this->filterService = null;
         $this->filterRecipient = null;
+        $this->timePeriodFilter = null;
         $this->success('Filtres réinitialisés');
     }
 
@@ -63,10 +64,24 @@ class ManageDocuments extends Component
         $this->dispatch('incomingDocumentDeleted');
     }
 
+    public function toggleReadStatus($documentId)
+    {
+        $user = auth()->user();
+        $document = Document::find($documentId);
+
+        if ($document->readers->contains($user)) {
+            $document->readers()->detach($user);
+            $this->success(__('messages.mark_as_unread_success'));
+        } else {
+            $document->readers()->attach($user, ['read_at' => now()]);
+            $this->success(__('messages.mark_as_read_success'));
+        }
+    }
+
     public function render()
     {
         $headers = [
-            ['key' => 'id', 'label' => 'Identifiant'],
+            // ['key' => 'id', 'label' => 'Identifiant'],
             ['key' => 'order_number', 'label' => 'N ordre', 'sortable' => true],
             ['key' => 'subject', 'label' => 'Sujet', 'sortable' => true],
             ['key' => 'description', 'label' => 'Description', 'sortable' => true],
@@ -74,7 +89,7 @@ class ManageDocuments extends Component
             ['key' => 'department_sent_to', 'label' => 'Service conçu', 'sortable' => false],
             ['key' => 'user_sent_to', 'label' => 'Employé conçu', 'sortable' => false],
             ['key' => 'created_at', 'label' => 'Envoyé le', 'sortable' => true],
-            ['key' => 'updated_at', 'label' => 'Modifié le', 'sortable' => true],
+            // ['key' => 'updated_at', 'label' => 'Modifié le', 'sortable' => true],
         ];
 
         $documentsQuery = Document::query();

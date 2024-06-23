@@ -33,12 +33,15 @@
         // Increment the count of incoming documents
         let incomingCountElement = document.querySelector('.incomingDocumentsCount');
         let incomingCountValue = parseInt(incomingCountElement.textContent);
-        incomingCountElement.textContent = incomingCountValue - 1;
+        if(incomingCountValue){
+            incomingCountElement.textContent = incomingCountValue - 1;
+        }
     });
 
     $wire.on('count-changed', (event) => {
         console.log(event.count);
         document.querySelector('.incomingDocumentsCount').textContent = event.count
+        
     })
 </script>
 @endscript
