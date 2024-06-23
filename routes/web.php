@@ -47,8 +47,7 @@ Route::middleware([
     Route::get('/document/view/{id}', ViewDocumentComponent::class)->name('documents.view')->middleware('verify.otp');
     Route::get('/document/update/{id}', UpdateDocument::class)->name('documents.update');
 
-    Route::get('/notifications/unread', [NotificationController::class, 'getUnreadNotifications'])->middleware('auth');
-    Route::post('/notifications/mark-all-as-read', [NotificationController::class, 'markAllAsRead'])->middleware('auth');
+    // Route::get(event(new App\Events\NotificationEvent('Hello World! I am an event 😄')));
 
     Route::get('locale/{locale}', function ($locale) {
         session(['locale' => $locale]);

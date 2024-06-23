@@ -13,6 +13,8 @@ use Mary\Traits\Toast;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\OtpCodeMail;
 use App\Notifications\DocumentCreated;
+use Illuminate\Support\Facades\Event;
+use App\Events\NotificationEvent;
 
 class CreateDocument extends Component
 {
@@ -113,11 +115,15 @@ class CreateDocument extends Component
         $creator = auth()->user();
 
         // Notify the admin
-        $admin->notify(new DocumentCreated($document, $creator));
+        if ($admin->id !== $creator->id) {
+            $admin->notify(new DocumentCreated($document, $creator));
+        }
 
         if ($recipient) {
             // Notify the recipient if specified
-            $recipient->notify(new DocumentCreated($document, $creator));
+            if ($recipient->id !== $creator->id) {
+                $recipient->notify(new DocumentCreated($document, $creator));
+            }
         } else {
             // Notify all users in the service except the creator
             $serviceUsers = User::where('service_id', $document->service_id)
@@ -128,8 +134,8 @@ class CreateDocument extends Component
                 $user->notify(new DocumentCreated($document, $creator));
             }
         }
+        Event::dispatch(new NotificationEvent($document));
     }
-
 
     public function generateOtpCode()
     {

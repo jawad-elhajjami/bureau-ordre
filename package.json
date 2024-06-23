@@ -16,5 +16,11 @@
         "postcss": "^8.4.38",
         "tailwindcss": "^3.4.3",
         "vite": "^5.2.12"
+    },
+    "dependencies": {
+        "@esbuild-plugins/node-modules-polyfill": "^0.2.2",
+        "laravel-echo": "^1.16.1",
+        "node-polyfill-webpack-plugin": "^4.0.0",
+        "pusher-js": "^8.4.0-rc2"
     }
 }

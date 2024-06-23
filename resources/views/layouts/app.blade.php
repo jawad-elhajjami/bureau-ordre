@@ -4,7 +4,6 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
-        <meta name="user-id" content="{{ auth()->user()->id }}">
 
         <title>{{ config('app.name', 'Bureau d\'ordre') }}</title>
 
@@ -20,16 +19,12 @@
         @livewireStyles
 
         <style>
-            .indicator-dot {
-                display: inline-block;
+            .custom-scrollbar::-webkit-scrollbar {
+                display: none;
             }
-            .unread {
-                font-weight: bold;
-                color: black;
-            }
-            .read {
-                font-weight: normal;
-                color: gray;
+            .custom-scrollbar {
+                -ms-overflow-style: none; /* IE and Edge */
+                scrollbar-width: none; /* Firefox */
             }
         </style>
     </head>
@@ -72,7 +67,7 @@
 
                 </x-mary-dropdown>
 
-                @livewire('notification')
+                @livewire('notifications')
 
             </x-slot:actions>
         </x-mary-nav>
@@ -137,6 +132,27 @@
         @livewireScripts
 
         <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const dropdownTrigger = document.querySelector('.notification-indicator');
+                const notificationList = document.getElementById('notification-list');
+
+                if (window.Echo) {
+                    window.Echo.channel('notifications')
+                    .listen('NotificationEvent', (e) => {
+                        console.log('Notification received:', e);
+                        Livewire.dispatch('notificationReceived', e);
+                    });
+                } else {
+                    console.error('Echo is not defined');
+                }
+
+                if (dropdownTrigger && notificationList) {
+                    dropdownTrigger.addEventListener('click', function () {
+                        Livewire.dispatch('markAsRead');
+                    });
+                }
+            });
+
             // Function to change the theme and save it to localStorage
             function changeTheme(theme) {
                 document.documentElement.setAttribute('data-theme', theme);

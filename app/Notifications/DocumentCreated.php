@@ -3,9 +3,9 @@
 namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Notifications\Messages\BroadcastMessage;
 
 class DocumentCreated extends Notification implements ShouldQueue
 {
@@ -28,21 +28,21 @@ class DocumentCreated extends Notification implements ShouldQueue
     public function toDatabase($notifiable)
     {
         return [
-            'message' => 'Un nouveau document a été créé par ' . $this->creator->name . '.',
-            'document_id' => $this->document->id,
-            'document_title' => $this->document->subject,
-            'created_by' => $this->creator->name,
+            'document_name' => $this->document->subject,
+            'document_creator' => $this->creator->name,
+            'message' => "Un nouveau document " . $this->document->subject . " créé par " . $this->creator->name,
+            'link' => url('/documents/' . $this->document->id),
         ];
     }
 
-    public function toArray($notifiable)
+    public function toBroadcast($notifiable)
     {
-        return [
-            'message' => 'Un nouveau document a été créé par ' . $this->creator->name . '.',
-            'document_id' => $this->document->id,
-            'document_title' => $this->document->subject,
-            'created_by' => $this->creator->name,
-        ];
+        return new BroadcastMessage([
+            'document_name' => $this->document->subject,
+            'document_creator' => $this->creator->name,
+            'message' => "Un nouveau document " . $this->document->subject . " créé par " . $this->creator->name,
+            'link' => url('/documents/' . $this->document->id),
+        ]);
     }
 }
 
