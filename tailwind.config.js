@@ -5,7 +5,7 @@ import typography from '@tailwindcss/typography';
 /** @type {import('tailwindcss').Config} */
 export default {
 	daisyui: {
-		themes: ["light", "emerald", "winter", "lofi", "nord"],
+		themes: ["light", "emerald", "winter", "lofi", "nord", "pastel"],
 	},
     content: [
 		'./vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php',

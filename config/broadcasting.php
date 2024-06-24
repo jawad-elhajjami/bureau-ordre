@@ -42,10 +42,17 @@ return [
                 'scheme' => env('PUSHER_SCHEME', 'https'),
                 'encrypted' => true,
                 'useTLS' => true,
+                'curl_options' => [
+                    CURLOPT_SSL_VERIFYHOST => 0,
+                    CURLOPT_SSL_VERIFYPEER => 0
+                ],
             ],
             'client_options' => [
+                // for self signed ssl cert
+                'verify' => false, // <- Added this
                 // Guzzle client options: https://docs.guzzlephp.org/en/stable/request-options.html
             ],
+            
         ],
 
         'ably' => [

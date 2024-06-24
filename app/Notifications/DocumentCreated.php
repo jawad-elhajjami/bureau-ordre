@@ -31,7 +31,7 @@ class DocumentCreated extends Notification implements ShouldQueue
             'document_name' => $this->document->subject,
             'document_creator' => $this->creator->name,
             'message' => "Un nouveau document " . $this->document->subject . " créé par " . $this->creator->name,
-            'link' => url('/documents/' . $this->document->id),
+            'link' => url('/document/view/' . $this->document->id),
         ];
     }
 
@@ -41,7 +41,7 @@ class DocumentCreated extends Notification implements ShouldQueue
             'document_name' => $this->document->subject,
             'document_creator' => $this->creator->name,
             'message' => "Un nouveau document " . $this->document->subject . " créé par " . $this->creator->name,
-            'link' => url('/documents/' . $this->document->id),
+            'link' => url('/document/view/' . $this->document->id),
         ]);
     }
 }
