@@ -77,6 +77,9 @@ return [
     'mark_as_unread_btn' => 'حذف من لائحة الملفات المقروءة',
     'mark_as_read_success' => 'تم الحفظ كملف مقروء',
     'mark_as_unread_success' => 'تم حذف الملف من لائحة الملفات المقروءة',
-    'read_by_list' => 'تمت القراءة من قبل'
+    'read_by_list' => 'تمت القراءة من قبل',
+    'notifications_dropdown_title' => 'الاشعارات',
+    'mark_all_as_read_btn' => 'تمت قراءة جميع الاشعارات',
+    'new' => 'جديد',
 ];
 

@@ -78,5 +78,9 @@ return [
     'mark_as_read_success' => 'Le document a été marqué comme lu',
     'mark_as_unread_success' => 'Le document a été marqué comme non lu',
     'read_by_list' => 'Lu par',
+    'notifications_dropdown_title' => 'Notifications',
+    'mark_all_as_read_btn' => 'Marquer tout comme lu',
+    'new' => 'Nouveau',
+
 ];
 

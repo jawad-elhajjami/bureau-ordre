@@ -14,6 +14,7 @@
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
         <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js"></script>
+        <script src="https://js.pusher.com/7.0/pusher.min.js"></script>
 
         <!-- Styles -->
         @livewireStyles
@@ -29,7 +30,7 @@
         </style>
     </head>
     <body class="font-sans antialiased min-h-screen font-sans antialiased bg-base-200/50 dark:bg-base-200" dir="{{ App::isLocale('ar') ? 'rtl' : 'ltr' }}">
-
+        <audio id="notification-sound" src="{{ asset('sounds/mixkit-correct-answer-tone-2870.wav') }}" preload="auto"></audio>
         {{-- The navbar with `sticky` and `full-width` --}}
         <x-mary-nav sticky full-width>
 
@@ -65,6 +66,7 @@
                     <x-mary-menu-item title="Winter" onclick="changeTheme('winter')" />
                     <x-mary-menu-item title="Lofi" onclick="changeTheme('lofi')" />
                     <x-mary-menu-item title="Nord" onclick="changeTheme('nord')" />
+                    <x-mary-menu-item title="Pastel" onclick="changeTheme('pastel')" />
 
                 </x-mary-dropdown>
 
@@ -134,19 +136,36 @@
         @livewireScripts
 
         <script>
+
             document.addEventListener('DOMContentLoaded', function () {
                 const dropdownTrigger = document.querySelector('.notification-indicator');
                 const notificationList = document.getElementById('notification-list');
+                const notificationSound = document.getElementById('notification-sound');
 
-                if (window.Echo) {
-                    window.Echo.channel('notifications')
-                    .listen('NotificationEvent', (e) => {
-                        console.log('Notification received:', e);
-                        Livewire.dispatch('notificationReceived', e);
+                Pusher.logToConsole = true;
+
+                var pusher = new Pusher('39884f5a414a79159783', {
+                    cluster: 'mt1',
+                    encrypted: true
+                });
+
+                var channel = pusher.subscribe('notifications');
+                channel.bind('NotificationEvent', function(data) {
+                    console.log('Notification received:', data);
+                    Livewire.dispatch('notificationReceived', {value: data});
+
+                    // Play notification sound
+                    Livewire.on('playSound',(event)=>{
+                        console.log('Play sound');
+                        if (notificationSound) {
+                            notificationSound.play().catch(function(error) {
+                                console.error('Error playing sound:', error);
+                            });
+                        }
                     });
-                } else {
-                    console.error('Echo is not defined');
-                }
+
+                    
+                });
 
                 if (dropdownTrigger && notificationList) {
                     dropdownTrigger.addEventListener('click', function () {

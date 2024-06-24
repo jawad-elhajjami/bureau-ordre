@@ -114,15 +114,19 @@ class CreateDocument extends Component
         $recipient = $document->recipient;
         $creator = auth()->user();
 
+        $notifiedUsers = [];
+
         // Notify the admin
-        if ($admin->id !== $creator->id) {
+        if ($admin->id !== $creator->id && !in_array($admin->id, $notifiedUsers)) {
             $admin->notify(new DocumentCreated($document, $creator));
+            $notifiedUsers[] = $admin->id;
         }
 
         if ($recipient) {
             // Notify the recipient if specified
-            if ($recipient->id !== $creator->id) {
+            if ($recipient->id !== $creator->id && !in_array($recipient->id, $notifiedUsers)) {
                 $recipient->notify(new DocumentCreated($document, $creator));
+                $notifiedUsers[] = $recipient->id;
             }
         } else {
             // Notify all users in the service except the creator
@@ -131,9 +135,13 @@ class CreateDocument extends Component
                 ->get();
 
             foreach ($serviceUsers as $user) {
-                $user->notify(new DocumentCreated($document, $creator));
+                if (!in_array($user->id, $notifiedUsers)) {
+                    $user->notify(new DocumentCreated($document, $creator));
+                    $notifiedUsers[] = $user->id;
+                }
             }
         }
+        // Dispatch the notification event once with the document's data
         Event::dispatch(new NotificationEvent($document));
     }
 
