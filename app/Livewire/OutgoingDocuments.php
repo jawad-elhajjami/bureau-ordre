@@ -83,7 +83,7 @@ class OutgoingDocuments extends Component
         // Sorting
         $documents = $documentsQuery
             ->orderBy($this->sortBy['column'], $this->sortBy['direction'])
-            ->paginate(4);
+            ->paginate(25);
 
         return view('livewire.outgoing-documents', [
             'documents' => $documents,

@@ -21,7 +21,11 @@ class IncomingDocuments extends Component
     public function searchChanged($value)
     {
         $this->search = $value;
+    }
 
+    #[On('update-documents')]
+    public function refreshView(){
+        $this->render();
     }
 
     public function sortBy($column)
@@ -98,7 +102,7 @@ class IncomingDocuments extends Component
 
         $documents = $documentsQuery
             ->orderBy($this->sortBy['column'], $this->sortBy['direction'])
-            ->paginate(4);
+            ->paginate(25);
 
         $this->incomingDocumentsCount = $documents->count();
         $this->dispatch('count-changed', count: $this->incomingDocumentsCount);

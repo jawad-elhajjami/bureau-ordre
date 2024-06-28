@@ -17,6 +17,21 @@ class Service extends Model
     {
         return $this->hasMany(User::class);
     }
+
+    public function documents(){
+        return $this->hasMany(Document::class);
+    }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function ($service) {
+            User::where('service_id', $service->id)->update(['service_id' => null]);
+        });
+
+    }
+    
     
 
 }

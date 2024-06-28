@@ -30,7 +30,7 @@ return [
     'dashboard_title_str' => 'Tableau de bord',
     'dashboard_subtitle_str' => 'Analyses et statistiques',
     'exchanged_documents_stat_title' => 'Documents échangés',
-    'documents_categories_stat_title' => 'Nombre de documents par catégorie',
+    'documents_categories_stat_title' => 'Nombre de catégories',
     'users_stat_title' => 'Nombre d\'utilisateurs',
     'services_stat_title' => 'Nombre de services',
     'number_of_documents_in_last_twelve_months' => 'Nombre de documents dans les 12 derniers mois',
@@ -81,6 +81,6 @@ return [
     'notifications_dropdown_title' => 'Notifications',
     'mark_all_as_read_btn' => 'Marquer tout comme lu',
     'new' => 'Nouveau',
-
+    'reset_view_btn' => 'Réinitialiser l\'affichage',
 ];
 

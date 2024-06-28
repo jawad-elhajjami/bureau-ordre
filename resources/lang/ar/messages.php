@@ -30,7 +30,7 @@ return [
     'dashboard_title_str' => 'لوحة التحكم',
     'dashboard_subtitle_str' => 'تحليلات و احصائيات',
     'exchanged_documents_stat_title' => 'الملفات المتبادلة',
-    'documents_categories_stat_title' => 'عدد الملفات حسب الصنف',
+    'documents_categories_stat_title' => 'عدد أصناف الملفات',
     'users_stat_title' => 'عدد المستخدمين',
     'services_stat_title' => 'عدد الأقسام',
     'number_of_documents_in_last_twelve_months' => 'عدد الملفات في ال 12 شهرا الأخيرة',
@@ -81,5 +81,6 @@ return [
     'notifications_dropdown_title' => 'الاشعارات',
     'mark_all_as_read_btn' => 'تمت قراءة جميع الاشعارات',
     'new' => 'جديد',
+    'reset_view_btn' => 'تجديد العرض',
 ];
 

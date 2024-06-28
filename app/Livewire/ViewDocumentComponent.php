@@ -2,36 +2,35 @@
 
 namespace App\Livewire;
 
+use App\Events\NoteNotificationEvent;
+use App\Events\NotificationEvent;
 use App\Models\Document;
-use App\Models\note;
+use App\Models\Note;
+use App\Models\User;
+use App\Notifications\NoteCreated;
 use Exception;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
+use Livewire\Attributes\On;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
-use Smalot\PdfParser\Parser;
 use Livewire\WithPagination;
 use Mary\Traits\Toast;
+use Smalot\PdfParser\Parser;
 
 class ViewDocumentComponent extends Component
 {
-
     use WithPagination;
     use Toast;
 
     public $document;
-
-    // Add the $persist property to maintain Livewire state across navigation actions
-    protected $persist = true;
-
     public $selectedTab = 'details';
     public $metadata = [];
-    public $otherDocuments = [];
     public $content = '';
 
     #[Validate('required|min:3|max:1000|string')]
     public $note;
-
 
     public $columns = [
         'order_number' => 'N ordre',
@@ -44,6 +43,7 @@ class ViewDocumentComponent extends Component
         'updated_at' => 'Date de modification',
         // Add other columns as needed
     ];
+
     public function mount($id)
     {
         // Retrieve the document
@@ -56,49 +56,80 @@ class ViewDocumentComponent extends Component
 
         // Extract metadata
         $this->extractMetadata();
-
-        // Find other documents by the same user
-        $this->otherDocuments = Document::where('user_id', $this->document->user_id)
-        ->where('id', '!=', $id) // Exclude the current document
-        ->get();
-
     }
 
-    public function addNote(){
+    #[On('update-notes')]
+    public function updateNotes(){
+        $this->dispatch('refresh-view');
+        $this->selectedTab = 'notes';
+    }
+    
+
+    private function notifyUsers($note)
+    {
+        $creator = auth()->user();
+
+        // Notify the creator of the document
+        $documentOwner = $note->document->owner;
+        if ($documentOwner && $documentOwner->id !== $creator->id) {
+            $documentOwner->notify(new NoteCreated($note, $creator));
+        }
+
+        // notifiy document recipient(s)
+        if($note->document->recipient_id != null){
+            $recipient = User::findOrFail($note->document->recipient_id);
+            $recipient->notify(new NoteCreated($note, $creator));
+        }else{
+            $serviceUsers = User::where('service_id', $note->document->service_id)
+                ->where('id', '!=', $creator->id)
+                ->get();
+
+            foreach ($serviceUsers as $user) {
+                $user->notify(new NoteCreated($note, $creator));
+            }
+        }
+
+        // Dispatch the notification event once with the document's data
+        Event::dispatch(new NoteNotificationEvent($note));
+    }
+
+
+    public function addNote()
+    {
         $this->dispatch('refresh-view');
         $this->validate();
 
-        try{
-            Note::create([
+        try {
+            $note = Note::create([
                 'user_id' => auth()->user()->id,
                 'document_id' => $this->document->id,
                 'content' => $this->note
             ]);
             $this->success('Note ajouté avec succés !');
             $this->note = '';
-        }catch(Exception $e){
+            // Notify users about the note creation
+            $this->notifyUsers($note);
+        } catch (Exception $e) {
             $this->error($e->getMessage());
         }
-
     }
 
-    public function deleteNote($id){
+    public function deleteNote($id)
+    {
         $note = Note::findOrFail($id);
         if (Gate::denies('delete-note', $note)) {
             abort(403, "You are not authorized to delete this note.");
         }
         $note->delete();
-        $this->error('Note '. $note->id . ' supprimé');
+        $this->error('Note ' . $note->id . ' supprimé');
         $this->dispatch('refresh-view');
     }
-
 
     public function getDocumentUrl()
     {
         // Generate a secure URL to the document
         return Storage::disk('files')->url($this->document->file_path);
     }
-
 
     private function extractMetadata()
     {
@@ -128,15 +159,18 @@ class ViewDocumentComponent extends Component
         }
     }
 
-
-
     public function render()
     {
-        return view('livewire.view-document-component',[
-            'notes' => Note::where('document_id', $this->document->id)->get(),
-            'notes_count' =>  note::where('document_id', $this->document->id)->count()
+        $otherDocuments = Document::where('user_id', $this->document->user_id)
+            ->where('id', '!=', $this->document->id) // Exclude the current document
+            ->paginate(5);
+
+        return view('livewire.view-document-component', [
+            'notes' => Note::where('document_id', $this->document->id)
+                ->orderBy('created_at', 'desc')
+                ->get(),
+            'notes_count' => Note::where('document_id', $this->document->id)->count(),
+            'otherDocuments' => $otherDocuments,
         ]);
     }
-
-
 }

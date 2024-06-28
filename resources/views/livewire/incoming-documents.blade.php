@@ -9,7 +9,7 @@
                         @else
                             <x-mary-popover>
                                 <x-slot:trigger>
-                                    <div class="w-9 h-9 text-sm font-bold text-white flex items-center justify-center rounded-full border border-gray-400" style="background-color: {{ $document->owner->color ?? 'rgb(168,85,247)' }};">{{ $document->owner->initials }}</div>
+                                    <div class="w-9 h-9 text-sm font-bold text-gray-600 flex items-center justify-center rounded-full border border-gray-400" style="background-color: {{ $document->owner->color ?? 'rgb(168,85,247)' }};">{{ $document->owner->initials }}</div>
                                 </x-slot:trigger>
                                 <x-slot:content>
                                     Nom: {{ $document->owner->name }} <br>
