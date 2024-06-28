@@ -33,9 +33,8 @@ class NoteCreated extends Notification implements ShouldQueue
         return [
             'note_id' => $this->note->id,
             'note_content' => $this->note->content,
-            'message' => $this->creator->name . ' a ajouté une nouvelle note : ' . Str::limit($this->note->content, 15, $end = '...') . ' dans le document '. $this->note->document->subject,
+            'message' => $this->creator->name . ' a ajouté une nouvelle note : ' . Str::limit($this->note->content, 15, $end = '...') . ' dans le document '. $this->note->document->order_number,
             'link' => null,
-            // 'link' => url('/notes/' . $this->note->id),
         ];
     }
 
@@ -44,9 +43,8 @@ class NoteCreated extends Notification implements ShouldQueue
         return new BroadcastMessage([
             'note_id' => $this->note->id,
             'note_content' => $this->note->content,
-            'message' => $this->creator->name . 'a ajouté une nouvelle note : ' . Str::limit($this->note->content, 15, $end = '...') . ' dans le document '. $this->note->document->subject,
+            'message' => $this->creator->name . 'a ajouté une nouvelle note : ' . Str::limit($this->note->content, 15, $end = '...') . ' dans le document '. $this->note->document->order_number,
             'link' => null,
-            // 'link' => url('/notes/' . $this->note->id),
         ]);
     }
 }

@@ -2,11 +2,14 @@
 
 namespace App\Livewire;
 
+use App\Events\DocumentMarkedAsReadEvent;
 use App\Models\Document;
+use Illuminate\Support\Facades\Event;
 use Livewire\Attributes\On;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Mary\Traits\Toast;
+use App\Notifications\MarkedAsRead;
 
 class IncomingDocuments extends Component
 {
@@ -63,7 +66,20 @@ class IncomingDocuments extends Component
         } else {
             $document->readers()->attach($user, ['read_at' => now()]);
             $this->success(__('messages.mark_as_read_success'));
+            $this->notifyUsers($document);
         }
+    }
+
+    private function notifyUsers($document)
+    {
+        $owner = $document->owner;
+        $reader = auth()->user();
+
+        // inform document owner that someone read his document
+        $owner->notify(new MarkedAsRead($document, $reader));
+
+        // Dispatch the notification event once with the document's data
+        Event::dispatch(new DocumentMarkedAsReadEvent($document, $reader));
     }
 
     public function render()

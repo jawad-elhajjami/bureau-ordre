@@ -1,5 +1,4 @@
 <div>
-
     <x-mary-header title="{{ __('messages.documents_header_title') }}" subtitle="{{ __('messages.documents_header_subtitle') }}">
         <x-slot:middle class="!justify-end">
             <x-mary-input icon="o-bolt" wire:model.live="search" placeholder="Search..." />
@@ -13,9 +12,7 @@
             <x-mary-loading class="text-primary" wire:loading wire:target="search" class="m-8"/>
             <x-mary-tab name="incoming" icon="o-document-arrow-down">
                 <x-slot:label>
-                    Arrivée
-
-                        <x-mary-badge :value="$incomingDocumentCount" class="badge-error incomingDocumentsCount"/>
+                    Arrivée <x-mary-badge :value="$incomingDocumentCount" class="badge-error incomingDocumentsCount"/>
 
                 </x-slot:label>
                 @livewire('incoming-documents', ['search' => $search])
@@ -29,7 +26,6 @@
 @script
 <script>
     $wire.on('incomingDocumentDeleted', () => {
-        console.log('deleted');
         // Increment the count of incoming documents
         let incomingCountElement = document.querySelector('.incomingDocumentsCount');
         let incomingCountValue = parseInt(incomingCountElement.textContent);
@@ -39,7 +35,6 @@
     });
 
     $wire.on('count-changed', (event) => {
-        console.log(event.count);
         document.querySelector('.incomingDocumentsCount').textContent = event.count
         
     })

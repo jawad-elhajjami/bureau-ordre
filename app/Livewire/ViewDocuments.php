@@ -31,17 +31,5 @@ class ViewDocuments extends Component
             })->count()
         ]);
         $user = auth()->user();
-        return view('livewire.view-documents',[
-            'incomingDocumentCount' => Document::where(function ($query) use ($user) {
-                // Include documents specifically sent to the user
-                $query->where('recipient_id', $user->id);
-
-                // Include documents sent to the user's service if recipient_id is null
-                $query->orWhere(function ($query) use ($user) {
-                    $query->whereNull('recipient_id')
-                          ->where('service_id', $user->service_id);
-                });
-            })->count()
-        ]);
     }
 }
