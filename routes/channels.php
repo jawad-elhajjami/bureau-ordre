@@ -24,3 +24,7 @@ Broadcast::channel('notifications', function () {
 Broadcast::channel('notes-notifications', function () {
     return true;
 });
+
+Broadcast::channel('marked-as-read-notifications', function () {
+    return true;
+});

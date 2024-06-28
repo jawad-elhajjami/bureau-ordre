@@ -48,6 +48,24 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
+    // Listen to (marked-as-read-notifications) channel
+    let markedAsReadChannel = pusher.subscribe('marked-as-read-notifications');
+    markedAsReadChannel.bind('DocumentMarkedAsReadEvent', function(data) {
+        Livewire.dispatch('DocumentReadEvent', { notification: data });
+
+        // Play notification sound
+        Livewire.on('playSound', (event) => {
+            console.log('Play sound');
+            const notificationSound = document.getElementById('notification-sound');
+            if (notificationSound) {
+                notificationSound.play().catch(function (error) {
+                    console.error('Error playing sound:', error);
+                });
+            }
+        });
+    });
+    
+
     // Existing code for handling dropdownTrigger and notificationList
     const dropdownTrigger = document.querySelector('.notification-indicator');
     const notificationList = document.getElementById('notification-list');

@@ -243,6 +243,16 @@
             <!-- Load PDF.js library -->
             <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js" onerror="handlePdfJsError()"></script>
 
+            <!-- Print PDF -->
+            <script>
+                function printPdf() {
+                    const printWindow = window.open(url, '_blank');
+                    printWindow.onload = function() {
+                        printWindow.print();
+                    };
+                }
+            </script>
+
             <!-- Initialize PDF viewer every time the "refresh-view" event is triggered -->
             @script
                 <script>

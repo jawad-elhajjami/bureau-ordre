@@ -106,7 +106,19 @@
                     <x-mary-menu-item title="{{ __('messages.menu_dashboard_title') }}" icon="o-home" link="{{ route('dashboard') }}" no-wire-navigate/>
                     <x-mary-menu-sub title="{{ __('messages.menu_manage_documents_title') }}" icon="o-document">
                         <x-mary-menu-item title="{{ __('messages.menu_share_document_title') }}" link="{{ route('create-document') }}" icon="o-paper-airplane" />
-                        <x-mary-menu-item title="{{ __('messages.menu_list_documents_title') }}" link="{{ route('view-documents') }}" icon="o-inbox" />
+                        @php
+                            $incomingDocumentsCount = App\Models\Document::where(function ($query) use ($user) {
+                                // Include documents specifically sent to the user
+                                $query->where('recipient_id', $user->id);
+
+                                // Include documents sent to the user's service if recipient_id is null
+                                $query->orWhere(function ($query) use ($user) {
+                                    $query->whereNull('recipient_id')
+                                        ->where('service_id', $user->service_id);
+                                });
+                            })->count()
+                        @endphp
+                        <x-mary-menu-item title="{{ __('messages.menu_list_documents_title') }}" link="{{ route('view-documents') }}" icon="o-inbox" badge="{{ $incomingDocumentsCount }}" badge-classes="!badge-error"/>
                         <x-mary-menu-item title="{{ __('messages.menu_scan_documents_title') }}" link="{{ route('documents.scan') }}" icon="o-printer" no-wire-navigate/>
                         @if(Auth::user() && Auth::user()->role->name == 'admin')
                             <x-mary-menu-item title="{{ __('messages.menu_all_documents_title') }}" link="{{ route('documents.all') }}" icon="o-list-bullet" />

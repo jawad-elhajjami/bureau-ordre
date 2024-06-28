@@ -101,7 +101,7 @@ class Notifications extends Component
         // show notitifcation to document owner
         if(auth()->user()->id == $document->owner->id){
             $this->display($message);
-            $this->playNotificationSound($notification);
+            $this->playNotificationSound();
         }
 
         // show notification toast to document recipients
@@ -109,7 +109,7 @@ class Notifications extends Component
         if($document->recipient_id != null || $document->recipient_id != ''){
             if(auth()->user()->id == $document->recipient_id){
                 $this->display($message);
-                $this->playNotificationSound($notification);
+                $this->playNotificationSound();
             }
         }
 
@@ -117,7 +117,7 @@ class Notifications extends Component
         if($document->service_id != null && $document->recipient_id == null){
             if(auth()->user()->service_id == $document->service_id){
                 $this->display($message);
-                $this->playNotificationSound($notification);
+                $this->playNotificationSound();
             }
         }
 
@@ -126,9 +126,25 @@ class Notifications extends Component
 
     }
 
+    #[On('DocumentReadEvent')]
+    public function showMarkedAsReadNotification($notification){
+        $creator = auth()->user();
+        $ownerId = $notification['notification']['user_id'];
+        if($creator->id == $ownerId){
+            $this->refreshNotifications();
+            $this->playNotificationSound();
+        }
+    }
+
     public function markAsRead()
     {
         Auth::user()->unreadNotifications->markAsRead();
+        $this->refreshNotifications();
+        $this->unreadCount = 0;
+    }
+
+    public function deleteAllNotifications(){
+        Auth::user()->notifications()->delete();
         $this->refreshNotifications();
         $this->unreadCount = 0;
     }
