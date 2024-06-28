@@ -1,26 +1,31 @@
 <div class="container">
-    <div class="flex items-center w-full justify-between mb-4 p-4 bg-white rounded-lg border border-gray-200">
+
+    <!-- CONTROLS CONTAINER => STARTS HERE -->
+    <div class="flex items-center w-full justify-between mb-4 p-4 bg-white rounded-lg border border-gray-200 flex-wrap gap-2">
         <h1 class="text-2xl font-bold">{{ $document->subject }}</h1>
-        <div class="controls flex gap-4 items-center">
+        <div class="controls flex gap-4 items-center flex-wrap">
             <x-mary-button id="prev-page" icon="o-arrow-left"  class="btn-sm btn-primary"/>
             <input id="page-input" type="number" min="1" value="1" class="border border-gray-200 rounded-lg px-4 py-2">
             <span>/ <span id="page-count"></span></span>
             <x-mary-button id="next-page" icon="o-arrow-right" class="btn-sm btn-primary"/>
         </div>
 
-        <div class="controls">
+        <div class="controls flex items-center gap-1">
             <x-mary-button id="zoom-in" icon="o-magnifying-glass-plus" class="btn-secondary btn-sm"/>
+            <x-mary-button id="fit-to-view" label="{!! __('messages.reset_view_btn') !!}" class="btn-secondary btn-sm" />
             <x-mary-button id="zoom-out" icon="o-magnifying-glass-minus" class="btn-secondary btn-sm"/>
+            <x-mary-button id="rotate-page" icon="o-arrow-path" class="btn-warning btn-sm" />
             <x-mary-button label="Imprimer" icon="o-printer" class="btn-sm btn-primary" onclick="printPdf()" />
         </div>
-
     </div>
+    <!-- CONTROLS CONTAINER => ENDS HERE -->
 
+    <!-- GRID CONTAINER => STARTS HERE -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8">
 
-    
-    <div class="grid grid-cols-5 gap-8">
+        <div class="col-span-2 bg-white p-8 rounded-lg border border-gray-200 h-fit lg:sticky lg:top-20 w-full">
 
-        <div class="col-span-2 bg-white p-8 rounded-lg border border-gray-200 h-fit sticky top-20">
+            <!-- Tabs START HERE -->
             <x-mary-tabs wire:model="selectedTab">
                 <x-mary-tab name="details" label="Détails">
                     
@@ -130,7 +135,7 @@
                                     <x-mary-popover>
                                         <x-slot:trigger>
                                             @if($note->writer != NULL)
-                                                <div class="w-9 h-9 text-sm font-bold text-white flex items-center justify-center rounded-full border border-gray-300" style="color:#fff;background-color: {{ $note->writer->color ?? 'rgb(168,85,247)' }};">{{ $note->writer->initials }}</div>
+                                                <div class="w-9 h-9 text-sm font-bold text-gray-600 flex items-center justify-center rounded-full border border-gray-300" style="background-color: {{ $note->writer->color ?? 'rgb(168,85,247)' }};">{{ $note->writer->initials }}</div>
                                             @else
                                                 <x-mary-icon name="o-user"  class="w-8 h-8 m-8"/>
                                             @endif
@@ -194,7 +199,7 @@
                             <x-mary-popover>
                                 <x-slot:trigger>
                                     @if($document->owner != null)
-                                        <div class="m-8 w-20 h-20 text-lg font-bold text-white flex items-center justify-center rounded-full border border-gray-300" style="color:#fff;background-color: {{ $document->owner->color ?? 'rgb(168,85,247)' }};">{{ $document->owner->initials }}</div>
+                                        <div class="m-8 w-20 h-20 text-xl font-bold text-gray-600 flex items-center justify-center rounded-full border border-gray-300" style="background-color: {{ $document->owner->color ?? 'rgb(168,85,247)' }};">{{ $document->owner->initials }}</div>
                                     @else
                                             <x-mary-icon name="o-user"  class="w-8 h-8 m-8"/>
                                     @endif
@@ -210,132 +215,45 @@
                             </x-mary-popover>
                         </x-slot:figure>
                     </x-mary-card>
+
+                    <div class="mt-4">
+                        <!-- Pagination Links -->
+                        {{ $otherDocuments->links() }}
+                    </div>
+                     
                 </x-mary-tab>
             </x-mary-tabs>
-
+            <!-- Tabs END HERE -->
         </div>
 
+            <!-- PDF Viewer fallback (Use default browser PDF Viwer) -->
             <embed id="pdf-embed" src="{{ $this->getDocumentUrl() }}" type="application/pdf" class="h-screen col-span-3 w-full hidden" />
-            <div id="pdf-viewer-container" class="h-screen flex items-center justify-center overflow-auto col-span-3 bg-white border border-gray-200 rounded-lg"></div>
 
+            <!-- PDF Viewer Container -->
+            <div id="pdf-viewer-container" class="flex items-center justify-center overflow-auto col-span-3 bg-white border border-gray-200 rounded-lg h-auto lg:h-screen" wire:ignore></div>
+
+            <!-- Initialize document URL -->
+            <script type="text/javascript">
+                const url = '{{ $this->getDocumentUrl() }}';
+            </script>
+            
+            <!-- PDF manipulation opertations (rotate, zoom in, zoom out, reset view, print) -->
+            <script src="{{ asset('js/pdf.js') }}" type="text/javascript"></script>
+
+            <!-- Load PDF.js library -->
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js" onerror="handlePdfJsError()"></script>
+
+            <!-- Initialize PDF viewer every time the "refresh-view" event is triggered -->
+            @script
                 <script>
-                    function handlePdfJsError() {
-                        document.querySelectorAll('.controls').forEach(element => {
-                            element.style.display = 'none'
-                        });
-                        document.getElementById('pdf-viewer-container').style.display = 'none';
-                        document.getElementById('pdf-embed').style.display = 'block';
-                    }
-                    function printPdf() {
-                        const url = '{{ $this->getDocumentUrl() }}';
-                        const printWindow = window.open(url, '_blank');
-                        printWindow.onload = function() {
-                            printWindow.print();
-                        };
-                    }
-                    function initializePdfViewer() {
-                        const url = '{{ $this->getDocumentUrl() }}';
-                        const container = document.getElementById('pdf-viewer-container');
-                        const prevPageBtn = document.getElementById('prev-page');
-                        const nextPageBtn = document.getElementById('next-page');
-                        const zoomInBtn = document.getElementById('zoom-in');
-                        const zoomOutBtn = document.getElementById('zoom-out');
-                        const pageInput = document.getElementById('page-input');
-                        const pageCountSpan = document.getElementById('page-count');
-
-                        let currentPage = 1;
-                        let scale = 1;
-                        let pdfDocument = null;
-                        const minScale = 0.5; // Minimum scale value
-                        const maxScale = 2.5 // Maximum scale value
-
-                        const loadingTask = pdfjsLib.getDocument(url);
-                        loadingTask.promise.then(pdf => {
-                            pdfDocument = pdf;
-                            pageCountSpan.textContent = pdf.numPages;
-                            renderPage(currentPage);
-
-                            prevPageBtn.addEventListener('click', () => {
-                                if (currentPage > 1) {
-                                    currentPage--;
-                                    renderPage(currentPage);
-                                }
-                            });
-
-                            nextPageBtn.addEventListener('click', () => {
-                                if (currentPage < pdf.numPages) {
-                                    currentPage++;
-                                    renderPage(currentPage);
-                                }
-                            });
-
-                            zoomInBtn.addEventListener('click', () => {
-                                if(scale < maxScale){
-                                    scale += 0.1;
-                                    renderPage(currentPage);
-                                }
-                            });
-
-                            zoomOutBtn.addEventListener('click', () => {
-                                if (scale > minScale) {
-                                    scale -= 0.1;
-                                    renderPage(currentPage);
-                                }
-                            });
-
-                            pageInput.addEventListener('change', () => {
-                                let pageNumber = parseInt(pageInput.value);
-                                if (pageNumber >= 1 && pageNumber <= pdf.numPages) {
-                                    currentPage = pageNumber;
-                                    renderPage(currentPage);
-                                } else {
-                                    pageInput.value = currentPage;
-                                }
-                            });
-                        }, function (reason) {
-                            console.error(reason);
-                        });
-
-                        function renderPage(pageNum) {
-                            pdfDocument.getPage(pageNum).then(page => {
-                                const viewport = page.getViewport({ scale });
-
-                                // Prepare canvas using PDF page dimensions
-                                const canvas = document.createElement('canvas');
-                                const context = canvas.getContext('2d');
-                                canvas.height = viewport.height;
-                                canvas.width = viewport.width;
-
-                                // Clear previous canvas content
-                                container.innerHTML = '';
-
-                                // Append canvas to the container
-                                container.appendChild(canvas);
-
-                                // Render PDF page into canvas context
-                                const renderContext = {
-                                    canvasContext: context,
-                                    viewport: viewport
-                                };
-                                page.render(renderContext);
-
-                                // Update the input field value
-                                pageInput.value = pageNum;
-                            });
-                        }
-                    }
-
-                    document.addEventListener('DOMContentLoaded', initializePdfViewer);
-
-                </script>
-                 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js" onerror="handlePdfJsError()"></script>
-                @script
-                <script>
-                    $wire.on('refresh-view', () => {
+                    $wire.on('refresh-view', (event) => {
+                        console.log(event);
                         initializePdfViewer();
                     });
                 </script>
-                @endscript
+            @endscript
+
     </div>
+    <!-- GRID CONTAINER => ENDS HERE -->
 </div>
     

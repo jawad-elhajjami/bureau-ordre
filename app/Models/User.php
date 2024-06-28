@@ -111,26 +111,26 @@ class User extends Authenticatable
     private static function generateRandomColor()
     {
         $colors = [
-            '#2196F3', // Light Blue
-            '#4CAF50', // Light Green
-            '#F44336', // Light Red
-            '#FF9800', // Light Orange
-            '#9C27B0', // Light Purple
-            '#009688', // Light Teal
-            '#FFEB3B', // Light Yellow
-            '#E91E63', // Light Pink
-            '#00BCD4', // Light Cyan
-            '#FFC107', // Light Amber
-            '#3F51B5', // Indigo
-            '#795548', // Brown
-            '#673AB7', // Deep Purple
-            '#FF5722', // Deep Orange
-            '#607D8B', // Blue Grey
-            '#CDDC39', // Lime
-            '#8BC34A', // Light Green
-            '#03A9F4', // Light Blue
-            '#9E9E9E', // Grey
-            '#FF5252', // Red
+            '#FFB3BA', // Pastel Pink
+            '#BAFFC9', // Pastel Green
+            '#BAE1FF', // Pastel Blue
+            '#FFFFBA', // Pastel Yellow
+            '#FFDFBA', // Pastel Orange
+            '#E6BAFF', // Pastel Purple
+            '#C1FFC1', // Pastel Mint
+            '#FFC9DE', // Pastel Rose
+            '#C9FFFF', // Pastel Cyan
+            '#F0E68C', // Pastel Khaki
+            '#DDA0DD', // Pastel Plum
+            '#E0FFFF', // Pastel Light Cyan
+            '#FFDAB9', // Pastel Peach
+            '#D8BFD8', // Pastel Thistle
+            '#AFEEEE', // Pastel Turquoise
+            '#FFE4E1', // Pastel Misty Rose
+            '#F0FFF0', // Pastel Honeydew
+            '#F5F5DC', // Pastel Beige
+            '#FFF0F5', // Pastel Lavender
+            '#F0F8FF', // Pastel Alice Blue
         ];
         return $colors[array_rand($colors)];
     }

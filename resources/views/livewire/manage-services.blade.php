@@ -28,7 +28,7 @@
 
                     <x-mary-popover>
                         <x-slot:trigger>
-                            <div class="w-9 h-9 text-sm font-bold text-white flex items-center justify-center rounded-full border border-gray-300" style="color:#fff;background-color: {{ $member->color ?? 'rgb(168,85,247)' }};">{{ $member->initials }}</div>
+                            <div class="w-9 h-9 text-sm font-bold text-gray-600 flex items-center justify-center rounded-full border border-gray-300" style="background-color: {{ $member->color ?? 'rgb(168,85,247)' }};">{{ $member->initials }}</div>
                         </x-slot:trigger>
                         <x-slot:content>
                             Nom: {{ $member->name }} <br>
@@ -46,6 +46,11 @@
             </div>
             
             @endscope
+
+            @scope('cell_n_documents', $service)
+                {{ $service->documents()->count(); }}
+            @endscope
+
             @scope('actions', $service) 
                 <div class="flex gap-1">
                     <x-mary-button icon="o-trash" wire:click="delete({{ $service->id }})" spinner class="btn-sm btn-ghost text-red-600"  />
@@ -80,7 +85,7 @@
                             <x-mary-badge value="{{ $user->service->name }}" class="badge-warning ml-2" />
                         @else
                             <x-mary-checkbox
-                                label="{{ $user->name }}"
+                                label="{{ $user ? $user->name : 'Pas de service' }}"
                                 wire:model="users_multi_ids"
                                 value="{{ $user->id }}"
                                 class="checkbox-primary"

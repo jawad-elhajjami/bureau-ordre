@@ -21,7 +21,7 @@
                         title="{{ $notification->data['message'] }}"
                         class="notification unread block px-4 py-2 text-sm leading-5 text-gray-700 focus:outline-none focus:bg-gray-100 transition duration-150 ease-in-out"
                         style="font-weight: bold;"
-                        link="{{ $notification->data['link'] }}"
+                        link="{{ $notification->data['link'] !== null ? $notification->data['link'] : '' }}"
                         no-wire-navigate
                         badge="{{ __('messages.new') }}"
                         badge-classes="!badge-warning"
@@ -30,7 +30,7 @@
                     <x-mary-menu-item
                         title="{{ $notification->data['message'] }}"
                         class="notification read block px-4 py-2 text-sm leading-5 text-gray-700 focus:outline-none focus:bg-gray-100 transition duration-150 ease-in-out"
-                        link="{{ $notification->data['link'] }}"
+                        link="{{ $notification->data['link'] !== null ? $notification->data['link'] : '' }}"
                         no-wire-navigate
                     />
                 @endif

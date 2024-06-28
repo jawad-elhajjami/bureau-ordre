@@ -2,9 +2,11 @@
 
 namespace App\Livewire;
 
+use App\Models\Document;
 use App\Models\User;
 use Livewire\Component;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use Livewire\Attributes\On;
 use Mary\Traits\Toast;
 
@@ -36,15 +38,13 @@ class Notifications extends Component
             position: 'toast-bottom toast-end',    // optional (daisyUI classes)
             icon: 'o-information-circle',       // Optional (any icon)
             css: 'alert-info',                  // Optional (daisyUI classes)
-            timeout: 5000,                      // optional (ms)
+            timeout: 10000,                      // optional (ms)
         );
         $this->refreshNotifications();
     }
 
-    public function playNotificationSound($notification){
-        if($notification['recipient_id'] == auth()->user()->id || $notification['service_id'] == auth()->user()->service_id){
+    public function playNotificationSound(){
             $this->dispatch('playSound');
-        }
     }
 
     #[On('notificationReceived')]
@@ -56,6 +56,11 @@ class Notifications extends Component
         $recieving_service = $value['notification']['service_id'];
         $sender = User::where('id', $sender_id)->first()->name;
         $message = $sender . " vous a envoyé le document ". $documentTitle;
+
+        // Exclude the sender from receiving the notification
+        if (auth()->user()->id === $sender_id) {
+            return;
+        }
 
         if($reciever != null || $reciever != ''){
             if($reciever == auth()->user()->id){
@@ -71,12 +76,61 @@ class Notifications extends Component
             }
         }
 
+        $this->dispatch('update-documents');
+
+    }
+
+    #[On('noteNotificationRecieved')]
+    public function showNoteNotification($notification)
+    {
+        $content = $notification['notification']['content'];
+        $senderId = $notification['notification']['user_id'];
+        $documentId = $notification['notification']['document_id'];
+
+        $document = Document::findOrFail($documentId);
+
+        $sender = User::findOrFail($senderId)->name;
+        $documentSubject = $document->subject;
+        $message = "{$sender} a ajouté une note sur le document {$documentSubject}: {$content}";
+        
+        // Exclude the sender from receiving the notification
+        if (auth()->user()->id === $senderId) {
+            return;
+        }
+
+        // show notitifcation to document owner
+        if(auth()->user()->id == $document->owner->id){
+            $this->display($message);
+            $this->playNotificationSound($notification);
+        }
+
+        // show notification toast to document recipients
+
+        if($document->recipient_id != null || $document->recipient_id != ''){
+            if(auth()->user()->id == $document->recipient_id){
+                $this->display($message);
+                $this->playNotificationSound($notification);
+            }
+        }
+
+        // show notification toast to document service members
+        if($document->service_id != null && $document->recipient_id == null){
+            if(auth()->user()->service_id == $document->service_id){
+                $this->display($message);
+                $this->playNotificationSound($notification);
+            }
+        }
+
+        // update notes list
+        $this->dispatch('update-notes', tab: "notes" );
+
     }
 
     public function markAsRead()
     {
         Auth::user()->unreadNotifications->markAsRead();
         $this->refreshNotifications();
+        $this->unreadCount = 0;
     }
 
     public function render()

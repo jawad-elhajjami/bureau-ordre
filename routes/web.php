@@ -63,5 +63,5 @@ Route::middleware([
 
     Route::get('/document/scan', ScanDocuments::class)->name('documents.scan');
     Route::post('/dwt_upload/upload', [DWTUploadController::class, 'upload'])->name('dwtupload.upload');
-    Route::get('/courriel', Courriel::class)->name('courriel');
+    // Route::get('/courriel', Courriel::class)->name('courriel');
 });

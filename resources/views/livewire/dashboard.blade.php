@@ -18,7 +18,7 @@
                 icon="o-folder"
             />
             <x-mary-stat
-                title="{{ __('messages.users_stat_title') }}"
+                title="{!! __('messages.users_stat_title') !!}"
                 :value="$documentStats['users'] ?? 0"
                 icon="o-users"
             />

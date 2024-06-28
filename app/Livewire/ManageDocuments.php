@@ -6,6 +6,7 @@ use App\Models\Document;
 use App\Models\DocumentCategory;
 use App\Models\Service;
 use App\Models\User;
+use Livewire\Attributes\On;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Mary\Traits\Toast;
@@ -78,6 +79,12 @@ class ManageDocuments extends Component
         }
     }
 
+    #[On('update-documents')]
+    public function refreshView(){
+        $this->render();
+    }
+
+
     public function render()
     {
         $headers = [
@@ -144,7 +151,7 @@ class ManageDocuments extends Component
 
         $documents = $documentsQuery
             ->orderBy($this->sortBy['column'], $this->sortBy['direction'])
-            ->paginate(10);
+            ->paginate(25);
 
         // Check if any filters are applied
         if ($this->filterCategory || $this->filterService || $this->filterRecipient || $this->timePeriodFilter) {

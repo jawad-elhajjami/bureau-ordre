@@ -67,6 +67,7 @@
                     <x-mary-menu-item title="Lofi" onclick="changeTheme('lofi')" />
                     <x-mary-menu-item title="Nord" onclick="changeTheme('nord')" />
                     <x-mary-menu-item title="Pastel" onclick="changeTheme('pastel')" />
+                    <x-mary-menu-item title="Fantasy" onclick="changeTheme('fantasy')" />
 
                 </x-mary-dropdown>
 
@@ -116,7 +117,7 @@
                         <x-mary-menu-item title="{{  __('messages.menu_manage_services_title') }}" icon="o-building-office" link="{{ route('manage-services') }}" wire:navigate/>
                         <x-mary-menu-item title="{{ __('messages.menu_manage_categories_title') }}" icon="o-folder" link="{{ route('manage-categories') }}" wire:navigate />
                     @endif
-                    <x-mary-menu-item title="{{ __('messages.courriel_header_title') }}" icon="o-at-symbol" link="{{ route('courriel') }}" />
+                    {{-- <x-mary-menu-item title="{{ __('messages.courriel_header_title') }}" icon="o-at-symbol" link="{{ route('courriel') }}" /> --}}
                     <x-mary-menu-item title="{{ __('messages.menu_settings_title') }}" icon="o-cog-6-tooth" link="{{ route('profile.show') }}" />
                 </x-mary-menu>
             </x-slot:sidebar>
@@ -135,44 +136,8 @@
 
         @livewireScripts
 
+        <script src="{{ asset('js/notifications.js') }}" type="text/javascript"></script>
         <script>
-
-            document.addEventListener('DOMContentLoaded', function () {
-                const dropdownTrigger = document.querySelector('.notification-indicator');
-                const notificationList = document.getElementById('notification-list');
-                const notificationSound = document.getElementById('notification-sound');
-
-                Pusher.logToConsole = true;
-
-                var pusher = new Pusher('39884f5a414a79159783', {
-                    cluster: 'mt1',
-                    encrypted: true
-                });
-
-                var channel = pusher.subscribe('notifications');
-                channel.bind('NotificationEvent', function(data) {
-                    console.log('Notification received:', data);
-                    Livewire.dispatch('notificationReceived', {value: data});
-
-                    // Play notification sound
-                    Livewire.on('playSound',(event)=>{
-                        console.log('Play sound');
-                        if (notificationSound) {
-                            notificationSound.play().catch(function(error) {
-                                console.error('Error playing sound:', error);
-                            });
-                        }
-                    });
-
-                    
-                });
-
-                if (dropdownTrigger && notificationList) {
-                    dropdownTrigger.addEventListener('click', function () {
-                        Livewire.dispatch('markAsRead');
-                    });
-                }
-            });
 
             // Function to change the theme and save it to localStorage
             function changeTheme(theme) {

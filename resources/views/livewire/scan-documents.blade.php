@@ -82,6 +82,7 @@
             Dynamsoft.DWT.RegisterEvent('OnWebTwainReady', Dynamsoft_OnReady);
             Dynamsoft.DWT.ResourcesPath = '{{ asset("Resources/") }}';
 
+
             Dynamsoft.DWT.Load();
         }
     };
@@ -123,9 +124,6 @@
                 @this.set('message', response.message);
                 @this.set('messageType', response.type);
             }
-            setTimeout(function() {
-                location.reload();
-            }, 1500);
         };
 
         var OnFailure = function (errorCode, errorString, httpResponse) {
@@ -139,16 +137,10 @@
             if (response.message) {
                 @this.set('message', response.message);
                 @this.set('messageType', response.type);
-
-                // alert("Error: " + response.message);
             } else {
                 @this.set('message', response.message);
                 @this.set('messageType', response.type);
-                // alert("Upload failed: " + errorString);
             }
-            setTimeout(function() {
-                location.reload();
-            }, 1500);
         };
 
         DWObject.HTTPUpload(
