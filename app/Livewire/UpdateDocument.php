@@ -75,7 +75,7 @@ class UpdateDocument extends Component
             'n_ordre' => 'required|min:3|max:50|string',
             'sujet' => 'required|min:3|max:255|string',
             'description' => 'nullable|min:3|max:255|string',
-            'file' => 'nullable|file|max:2048|required_if:file,TemporaryUploadedFile',
+            'file' => 'nullable|file|max:2048|required_if:file,TemporaryUploadedFile|mimes:pdf',
             'service' => 'required|exists:services,id',
             'category' => 'required|exists:document_categories,id',
             'recipient' => 'nullable|exists:users,id'

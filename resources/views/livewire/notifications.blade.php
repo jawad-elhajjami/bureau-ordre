@@ -10,10 +10,10 @@
     </x-slot:trigger>
 
     <div id="notification-list" class="max-h-64 overflow-y-auto custom-scrollbar p-4">
-        <div class="flex items-center justify-between mb-4">
+        <div class="flex items-center justify-between gap-8 mb-4">
             <h3 class="text-xl font-medium">{{ __('messages.notifications_dropdown_title') }}</h3>
             <div class="flex gap-2">
-                <x-mary-button label="{{ __('messages.mark_all_as_read_btn') }}" class="btn-ghost btn-sm" wire:click="markAsRead"/>
+                <x-mary-button label="{{ __('messages.mark_all_as_read_btn') }}" class="btn-warning btn-sm" wire:click="markAsRead"/>
                 <x-mary-button icon="o-trash" class="btn-error text-white btn-sm" wire:click="deleteAllNotifications"/>
             </div>
         </div>

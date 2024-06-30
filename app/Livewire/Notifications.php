@@ -147,6 +147,7 @@ class Notifications extends Component
         Auth::user()->notifications()->delete();
         $this->refreshNotifications();
         $this->unreadCount = 0;
+        $this->success('Tous les notifications ont été supprimées');
     }
 
     public function render()

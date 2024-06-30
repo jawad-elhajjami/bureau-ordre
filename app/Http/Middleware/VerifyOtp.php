@@ -21,6 +21,11 @@ class VerifyOtp
             return $next($request);
         }
 
+        // Skip verification if user is owner of the document
+        if($user->id == $document->user_id){
+            return $next($request);
+        }
+
         // Skip OTP verification if OTP code is null
         if ($document && is_null($document->otp_code)) {
             return $next($request);

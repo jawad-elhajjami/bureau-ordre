@@ -62,7 +62,7 @@
                                     @foreach ($document->readers as $reader)
                                     <x-mary-popover>
                                         <x-slot:trigger>
-                                            <div class="w-10 h-10 rounded-full text-white flex items-center justify-center text-sm font-bold" style="background-color: {{ $reader->color }}">{{ $reader->initials }}</div>
+                                            <div class="w-10 h-10 rounded-full text-gray-600 flex items-center justify-center text-sm font-bold" style="background-color: {{ $reader->color }}">{{ $reader->initials }}</div>
                                         </x-slot:trigger>
                                         <x-slot:content>
                                             <b> {{ $reader->name }} </b> <br>
