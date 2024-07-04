@@ -80,6 +80,7 @@
                 Height: '100%' 
             }];
             Dynamsoft.DWT.RegisterEvent('OnWebTwainReady', Dynamsoft_OnReady);
+            Dynamsoft.DWT.ProductKey = '{{ env('APP_DWT_KEY') }}'
             Dynamsoft.DWT.ResourcesPath = '{{ asset("Resources/") }}';
 
 

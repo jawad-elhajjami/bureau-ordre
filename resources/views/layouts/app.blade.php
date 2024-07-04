@@ -103,9 +103,11 @@
 
                 {{-- Activates the menu item when a route matches the `link` property --}}
                 <x-mary-menu activate-by-route>
+                    
                     <x-mary-menu-item title="{{ __('messages.menu_dashboard_title') }}" icon="o-home" link="{{ route('dashboard') }}" no-wire-navigate/>
                     <x-mary-menu-sub title="{{ __('messages.menu_manage_documents_title') }}" icon="o-document">
-                        <x-mary-menu-item title="{{ __('messages.menu_share_document_title') }}" link="{{ route('create-document') }}" icon="o-paper-airplane" />
+                        <!-- disabled for the moment (users can use the "scan documents page to exchange messages") -->
+                        {{-- <x-mary-menu-item title="{{ __('messages.menu_share_document_title') }}" link="{{ route('create-document') }}" icon="o-paper-airplane" /> --}}
                         @php
                             $incomingDocumentsCount = App\Models\Document::where(function ($query) use ($user) {
                                 // Include documents specifically sent to the user
@@ -118,8 +120,10 @@
                                 });
                             })->count()
                         @endphp
-                        <x-mary-menu-item title="{{ __('messages.menu_list_documents_title') }}" link="{{ route('view-documents') }}" icon="o-inbox" badge="{{ $incomingDocumentsCount }}" badge-classes="!badge-error"/>
+                        
                         <x-mary-menu-item title="{{ __('messages.menu_scan_documents_title') }}" link="{{ route('documents.scan') }}" icon="o-printer" no-wire-navigate/>
+
+                        <x-mary-menu-item title="{{ __('messages.menu_list_documents_title') }}" link="{{ route('view-documents') }}" icon="o-inbox" badge="{{ $incomingDocumentsCount }}" badge-classes="!badge-error"/>
                         @if(Auth::user() && Auth::user()->role->name == 'admin')
                             <x-mary-menu-item title="{{ __('messages.menu_all_documents_title') }}" link="{{ route('documents.all') }}" icon="o-list-bullet" />
                         @endif

@@ -4,7 +4,8 @@
             <x-mary-input icon="o-bolt" wire:model.live="search" placeholder="Search..." />
         </x-slot:middle>
         <x-slot:actions>
-            <x-mary-button icon="o-plus" class="btn-primary" link="{{ route('create-document') }}" wire:navigate />
+            {{-- <x-mary-button icon="o-plus" class="btn-primary" link="{{ route('create-document') }}" wire:navigate /> --}}
+            <x-mary-button icon="o-plus" class="btn-primary" link="{{ route('documents.scan') }}" no-wire-navigate />
         </x-slot:actions>
     </x-mary-header>
     <div class="bg-white dark:bg-gray-800 overflow-hidden sm:rounded-lg p-4">

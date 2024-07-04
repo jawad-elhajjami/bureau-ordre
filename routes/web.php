@@ -43,7 +43,10 @@ Route::middleware([
     Route::get('/manage-users', ManageUsers::class)->name('manage-users')->middleware('role:admin');
     Route::get('/manage-services', ManageServices::class)->name('manage-services')->middleware('role:admin');
     Route::get('/manage-categories', ManageCategories::class)->name('manage-categories')->middleware('role:admin');
-    Route::get('/document/create', CreateDocument::class)->name('create-document');
+
+    ## disabled for the moment (users can use the "scan documents page to exchange messages")
+    // Route::get('/document/create', CreateDocument::class)->name('create-document');
+    
     Route::get('/inbox', ViewDocuments::class)->name('view-documents');
     Route::get('/files/{path}', [FilesController::class, 'show'])->where('path', '.*')->name('files.show');
     Route::get('/document/view/{id}', ViewDocumentComponent::class)->name('documents.view')->middleware('verify.otp');
